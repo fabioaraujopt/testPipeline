@@ -8,7 +8,7 @@ def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    #createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
 
     return {
         'statusCode': 200,
