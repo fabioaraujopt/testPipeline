@@ -8,14 +8,11 @@ def lambda_handler(event, context):
 
     eventBody = event["body"]
 
-    try:
-        createdAccount = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
-    except Exception as e: 
-        print(e)
-        
+    createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+
     return {
         'statusCode': 200,
-        'body': createdAccount
+        'body': "algo"
     }
     
 def createCloudWatchAccount(AWSAccountId,username):
