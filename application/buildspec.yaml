@@ -12,8 +12,8 @@ phases:
       - sam --version
       
       # Installing project dependencies
-      - cd os-cloud-cwusers
-      - pip install .
+      #- cd os-cloud-cwusers
+      #- pip install .
       
   
   pre_build:
