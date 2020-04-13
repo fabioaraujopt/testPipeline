@@ -1,0 +1,6 @@
+{
+    "body": "eyJ0ZXN0IjoiYm9keSJ9",
+    "resource": "/{proxy+}",
+    "path": "/",
+    "httpMethod": "POST"
+  }
