@@ -275,7 +275,7 @@ Resources:
             ServiceRole: !GetAtt CodeBuildServiceRole.Arn
             Source:
                 Type: CODEPIPELINE
-                BuildSpec: lambda/buildspec.yaml
+                BuildSpec: app/buildspec.yaml
             Artifacts:
                 Type: CODEPIPELINE
             Environment:
