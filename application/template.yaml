@@ -25,6 +25,8 @@ Resources:
           Properties:
             Path: /cwuser
             Method: post
+            RequestModel: 
+              Model: CWUserApiValidator
         ResetUserPassword:
           Type: Api 
           Properties:
@@ -35,4 +37,21 @@ Resources:
           Properties:
             Path: /cwuser
             Method: delete
-  
+
+  RequestValidator:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: "application/json"
+      Name: "CWUserApiValidator"
+      Schema:
+        $schema: "http://json-schema.org/draft-04/schema#"
+        title: Application Json
+        required:
+          - token
+          - username
+        type: object
+        properties:
+          token:
+            type: string
+          username:
+            type: string
