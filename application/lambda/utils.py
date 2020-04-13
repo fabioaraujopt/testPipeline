@@ -1,18 +1,6 @@
-import json
 import boto3
 import botocore
 import secrets
-import string
-import random
-
-
-def lambda_handler(event, context):
-
-    #except EntityAlreadyExistsException
-    return {
-        'statusCode': 200,
-        'body': event["body"]
-    }
 
 
 def assume_role(account_id):
@@ -40,7 +28,6 @@ def assume_role(account_id):
     return session
 
 
-
 def genpass(length):
     """Generate a random password.
     Args:
@@ -55,32 +42,3 @@ def genpass(length):
     return password
     
     
-    
-def createCloudWatchAccount(AWSAccountId,username):
-    
-    session = assume_role(str(AWSAccountId))
-    
-    iam = session.client('iam')
-    
-    iam.create_user(UserName = username)
-    
-    
-    response = iam.add_user_to_group(
-        GroupName='CloudWatchMonitor',
-        UserName=username
-    )
-    
-    password = genpass(8)
-    
-    login_profile = iam.create_login_profile(
-        UserName=username,
-        Password=genpass(8),
-        PasswordResetRequired=True
-    )
-    
-    login_profile['LoginProfile']['password'] = genpass(8) 
-    
-    return login_profile
-    
-def updateCloudWatchAccount():
-    print("todd")
