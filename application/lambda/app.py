@@ -1,6 +1,7 @@
 import json
 import string
 import random
+from utils import assume_role, genpass
 
 
 def lambda_handler(event, context):
