@@ -1,7 +1,7 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: 'os-cloud-database-backup'
+Description: 'testPipeline'
 
 Metadata:
     AWS::CloudFormation::Interface:
@@ -20,11 +20,11 @@ Parameters:
     ProjectName:
         Type: String
         Description: 'Project and Stack name'
-        Default: 'os-cloud-database-backup'
+        Default: 'testPipeline'
     ParentStackName:
         Description: 'Parent Stack Name'
         Type: String
-        Default: os-cloud-database-backup
+        Default: testPipeline
     GithubToken:
         Type: String
         Description: 'Github OAuth Token with full permissions on admin:repo_hook and repo'
