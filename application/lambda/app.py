@@ -8,11 +8,11 @@ def lambda_handler(event, context):
 
     eventBody = event["body"]
 
-    createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    #createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
 
     return {
         'statusCode': 200,
-        'body': "algo"
+        'body': event["body"]
     }
     
 def createCloudWatchAccount(AWSAccountId,username):
