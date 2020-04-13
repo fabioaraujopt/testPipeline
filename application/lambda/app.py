@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
-        'body': event["body"]["accountId"]
+        'body': eventBody["accountId"]
     }
     
 def createCloudWatchAccount(AWSAccountId,username):
