@@ -6,7 +6,7 @@ from utils import assume_role, genpass
 
 def lambda_handler(event, context):
 
-    eventBody = event["body"]
+    eventBody = json.load(event["body"])
 
     #createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
 
