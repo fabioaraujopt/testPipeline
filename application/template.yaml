@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  os-cloud-cwusers
+  //TODO description of the aplication
+
+  Sample SAM Template for os-cloud-cwusers
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  CWUsersControllerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    #Todo place role
+    Properties:
+      CodeUri: .
+      Handler: app.lambda_handler
+      Runtime: python3.6
+      Events:
+        CreateUser:
+          Type: Api 
+          Properties:
+            Path: /cwuser
+            Method: get
+        ResetUser:
+          Type: Api 
+          Properties:
+            Path: /cwuser
+            Method: put
+        DeleteUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /cwuser
+            Method: delete
+
+Outputs:
+  CWUsersControllerFunction:
+  Description: "Hello World Lambda Function ARN"
+  Value: !GetAtt HelloWorldFunction.Arn
