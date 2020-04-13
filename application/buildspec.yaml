@@ -24,7 +24,6 @@ phases:
   build:
     commands:
       # Use Build phase to build your artifacts (compile, etc.)
-      - cd ..
       - sam build
 
   post_build:
