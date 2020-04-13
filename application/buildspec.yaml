@@ -4,12 +4,13 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.8
+      python: 3.7
     commands:
       # Install packages or any pre-reqs in this phase.
       # Upgrading SAM CLI to latest version
       - pip install --upgrade aws-sam-cli
       - sam --version
+      
       # Installing project dependencies
       - cd os-cloud-cwusers
       - pip install .
