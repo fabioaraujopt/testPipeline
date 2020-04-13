@@ -8,16 +8,10 @@ import random
 
 def lambda_handler(event, context):
 
-#except EntityAlreadyExistsException
-    
-    return {
-        'event': json.dumps(event), 
-        'context': json.dumps(context)
-    }
-    
+    #except EntityAlreadyExistsException
     return {
         'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
+        'body': event["body"]
     }
 
 
