@@ -19,6 +19,8 @@ def lambda_handler(event, context):
     }
     
 def createCloudWatchAccount(AWSAccountId,username):
+
+    print(AWSAccountId, username)
     
     session = assume_role(str(AWSAccountId))
     
