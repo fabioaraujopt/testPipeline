@@ -24,8 +24,8 @@ Resources:
           Type: Api 
           Properties:
             Path: /cwuser
-            Method: get
-        ResetUser:
+            Method: post
+        ResetUserPassword:
           Type: Api 
           Properties:
             Path: /cwuser
@@ -35,4 +35,4 @@ Resources:
           Properties:
             Path: /cwuser
             Method: delete
-            
+  
