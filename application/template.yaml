@@ -35,8 +35,4 @@ Resources:
           Properties:
             Path: /cwuser
             Method: delete
-
-Outputs:
-  CWUsersControllerFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt CWUsersControllerFunction.Arn
+            
