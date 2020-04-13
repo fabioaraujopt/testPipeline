@@ -38,5 +38,5 @@ Resources:
 
 Outputs:
   CWUsersControllerFunction:
-  Description: "Hello World Lambda Function ARN"
-  Value: !GetAtt HelloWorldFunction.Arn
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt CWUsersControllerFunction.Arn
