@@ -1,7 +1,7 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: 'testPipeline'
+Description: 'testpipeline'
 
 Metadata:
     AWS::CloudFormation::Interface:
@@ -20,11 +20,11 @@ Parameters:
     ProjectName:
         Type: String
         Description: 'Project and Stack name'
-        Default: 'testPipeline'
+        Default: 'testpipeline'
     ParentStackName:
         Description: 'Parent Stack Name'
         Type: String
-        Default: testPipeline
+        Default: testpipeline
     GithubToken:
         Type: String
         Description: 'Github OAuth Token with full permissions on admin:repo_hook and repo'
@@ -275,7 +275,7 @@ Resources:
             ServiceRole: !GetAtt CodeBuildServiceRole.Arn
             Source:
                 Type: CODEPIPELINE
-                BuildSpec: application/buildspec.yaml
+                BuildSpec: lambda/buildspec.yaml
             Artifacts:
                 Type: CODEPIPELINE
             Environment:
