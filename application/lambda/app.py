@@ -88,12 +88,15 @@ def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
 
     iam = session.client('iam')
 
-    login_profile = iam.LoginProfile('user_name')
-
+    iam.delete_login_profile(
+        UserName=username
+    )
+    
     password = genpass(8)
 
-    login_profile.update(
-        Password = password,
+    login_profile = iam.create_login_profile(
+        UserName=username,
+        Password=genpass(8),
         PasswordResetRequired=True
     )
 
