@@ -9,13 +9,13 @@ def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    #try:
-    response = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
-    #except botocore.exceptions.ClientError as e:
-    #    return {
-    #        'statusCode': 400,
-    #        'body': json.dumps(errorResponse(e))
-    #    }
+    try:
+        response = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    except botocore.exceptions.ClientError as e:
+        return {
+            'statusCode': 400,
+            'body': json.dumps(errorResponse(e))
+        }
 
     return {
         'statusCode': 200,
