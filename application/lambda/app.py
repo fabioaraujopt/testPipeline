@@ -16,6 +16,10 @@ def lambda_handler(event, context):
             'statusCode': 400,
             'body': e.response['Error']['Code']
         }
+
+    print (credentials)
+    print (json.dumps(credentials))
+
     return {
         'statusCode': 200,
         'body': credentials
