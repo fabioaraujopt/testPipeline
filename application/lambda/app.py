@@ -6,6 +6,8 @@ from utils import assume_role, genpass
 import botocore
 
 
+groupName = 'CloudWatchMonitor'
+
 def lambda_handler(event, context):
     #validate payload
     eventBody = json.loads(event["body"])
@@ -36,7 +38,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     
     
     response = iam.add_user_to_group(
-        GroupName='CloudWatchMonitor',
+        GroupName=groupName,
         UserName=username
     )
     
@@ -66,6 +68,11 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
         UserName=username
     )  
     
+    iam.remove_user_from_group(
+        GroupName=groupName,
+        UserName=username
+    )
+
     iam.delete_user(UserName= username)
     
     response = {
