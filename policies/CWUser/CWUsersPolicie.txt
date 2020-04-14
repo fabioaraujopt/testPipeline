@@ -1,0 +1,22 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "iam:UpdateLoginProfile",
+                "iam:CreateLoginProfile",
+                "iam:AddUserToGroup",
+                "iam:RemoveUserFromGroup",
+                "iam:UpdateUser",
+                "iam:DeleteUser",
+                "iam:CreateUser",
+                "iam:DeleteLoginProfile",
+                "iam:ChangePassword",
+                "iam:GetAccountPasswordPolicy"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

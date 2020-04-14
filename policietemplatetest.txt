@@ -1,1 +1,0 @@
--Lambda Execution Role must be added to arn:aws:iam::756050260009:role/CloudWatchManagement2
