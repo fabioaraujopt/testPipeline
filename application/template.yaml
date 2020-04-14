@@ -58,7 +58,7 @@ Resources:
               Statement:
                 - Effect: Allow
                   Action:
-                    - "iam:AddUserToGroup"
+                    -  "iam:AddUserToGroup"
                     -  "iam:RemoveUserFromGroup"
                     -  "iam:UpdateUser"
                     -  "iam:DeleteUser"
