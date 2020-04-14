@@ -4,8 +4,7 @@ import json
 def errorResponse(exception):
 
     errorCode = exception.response['Error']['Code']
-    error_message = exception.response['Error']['Message']
-
+    
     if(errorCode == "AccessDenied"):
         error_message = "Access denied for account"
     if(errorCode == "EntityAlreadyExists"):
@@ -17,6 +16,5 @@ def errorResponse(exception):
         error_message = errorCode
 
     return {
-        "error_code": errorCode,
         "error_message": error_message
     }

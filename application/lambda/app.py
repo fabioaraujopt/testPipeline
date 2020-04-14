@@ -14,8 +14,8 @@ def lambda_handler(event, context):
 
     #try:
         #credentials = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
-
-    credentials = deleteUserCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+        #credentials = deleteUserCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    credentials = resetUserPasswordCloudWatchAccount(eventBody["accountId"],eventBody["username"])
 
     #except botocore.exceptions.ClientError as e:
     #    return {
