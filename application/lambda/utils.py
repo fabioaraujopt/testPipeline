@@ -1,6 +1,8 @@
 import boto3
 import botocore
 import secrets
+import string
+import random
 
 
 def assume_role(account_id):
@@ -41,4 +43,4 @@ def genpass(length):
         password += random.choice(choice)
     return password
     
-    
+#TODO error parser
