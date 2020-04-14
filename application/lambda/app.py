@@ -46,8 +46,12 @@ def createCloudWatchAccount(AWSAccountId,username):
         Password=genpass(8),
         PasswordResetRequired=True
     )
-    
-    login_profile['LoginProfile']['password'] = genpass(8) 
-    
-    return login_profile
+
+    response = {
+        'username' : login_profile['LoginProfile'],
+        'accountId': AWSAccountId,
+        'password': password
+    }
+
+    return response
     
