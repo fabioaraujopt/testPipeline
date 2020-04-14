@@ -61,6 +61,10 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
     session = assume_role(str(AWSAccountId))
 
     iam = session.client('iam')
+
+    iam.delete_login_profile(
+        UserName=username
+    )  
     
     iam.delete_user(UserName= username)
     
