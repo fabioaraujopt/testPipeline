@@ -8,7 +8,8 @@ import random
 def assume_role(account_id):
     sts = boto3.client("sts")
     
-    role_arn = "arn:aws:iam::{}:role/CloudWatchManagement2".format(account_id)
+    role_arn = "arn:aws:iam::{}:role/CWUsers".format(account_id)
+
     try:
         resp = sts.assume_role(
             RoleArn=role_arn,
