@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     except botocore.exceptions.ClientError as e:
         return {
             'statusCode': 400,
-            'body': e
+            'body': e.response['Error']['Code']
         }
 
 
