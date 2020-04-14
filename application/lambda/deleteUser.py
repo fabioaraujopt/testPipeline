@@ -28,18 +28,22 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
     session = assume_role(str(AWSAccountId))
 
     iam = session.client('iam')
-
+    
+    #if user exists
     iam.delete_login_profile(
         UserName=username
     )  
     
+    #if user is in group
     iam.remove_user_from_group(
         GroupName=groupName,
         UserName=username
     )
 
+    #if user exists
     iam.delete_user(UserName= username)
     
+    #if user not in user list
     response = {
         'accountId': AWSAccountId,
         'username' : username
