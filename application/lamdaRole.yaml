@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  CWUser:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+              AWS: 
+                - arn:aws:iam::756050260009:role/testpipeline-application-createCWUserRole-1Y21Y70JHJNZD
+                - arn:aws:iam::756050260009:role/testpipeline-application-deleteCWUserRole-ZNRH7A15UX2S
+                - arn:aws:iam::756050260009:role/testpipeline-application-resetPasswordCWUserRole-1XVODXKS01UOY
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: CWUserManagmentPolicie
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - "iam:UpdateLoginProfile"
+                  - "iam:CreateLoginProfile"
+                  - "iam:AddUserToGroup"
+                  - "iam:RemoveUserFromGroup"
+                  - "iam:UpdateUser"
+                  - "iam:DeleteUser"
+                  - "iam:CreateUser"
+                  - "iam:DeleteLoginProfile"
+                  - "iam:ChangePassword"
+                  - "iam:GetAccountPasswordPolicy"
+                Resource: '*'
+
+  CWUserGroup:
+    Type: AWS::IAM::Group
+    Properties: 
+      GroupName: CWUserMonitor
+      ManagedPolicyArns: 
+        - String
+      Path: String
+      Policies: 
+        - Policy
