@@ -2,6 +2,7 @@ import json
 import string
 import random
 from utils import assume_role, genpass
+import botocore
 
 
 def lambda_handler(event, context):
@@ -10,10 +11,10 @@ def lambda_handler(event, context):
 
     try:
         credentials = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
-    except expression as identifier:
+    except botocore.exceptions.ClientError as e:
         return {
             'statusCode': 400,
-            'body': identifier
+            'body': e
         }
 
 
