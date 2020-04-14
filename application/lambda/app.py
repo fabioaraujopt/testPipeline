@@ -10,16 +10,16 @@ def lambda_handler(event, context):
     #validate payload
     eventBody = json.loads(event["body"])
 
-    try:
+    #try:
         #credentials = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
 
-        credentials = deleteUserCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    credentials = deleteUserCloudWatchAccount(eventBody["accountId"],eventBody["username"])
 
-    except botocore.exceptions.ClientError as e:
-        return {
-            'statusCode': 400,
-            'body': json.dumps(errorResponse(e))
-        }
+    #except botocore.exceptions.ClientError as e:
+    #    return {
+    #         'statusCode': 400,
+    #        'body': json.dumps(errorResponse(e))
+    #    }
 
     return {
         'statusCode': 200,
