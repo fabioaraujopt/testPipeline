@@ -7,8 +7,11 @@ from utils import assume_role, genpass
 def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
+    #validate payload
 
     createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+
+
 
     return {
         'statusCode': 200,
@@ -20,6 +23,8 @@ def createCloudWatchAccount(AWSAccountId,username):
     print(AWSAccountId, username)
     
     session = assume_role(str(AWSAccountId))
+
+    #catch AccessDenied assume role not allowed
     
     iam = session.client('iam')
     
