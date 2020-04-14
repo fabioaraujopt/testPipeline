@@ -10,7 +10,7 @@ def errorResponse(exception):
     if(errorCode == "EntityAlreadyExists"):
         error_message = "Username already exists"
     else:
-        error_message = "Undefined"
+        error_message = errorCode
 
     return {
         "error_message": error_message
