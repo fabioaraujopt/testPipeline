@@ -1,7 +1,7 @@
 import json
 import string
 import random
-import errorResponse
+from errorResponse import errorResponse
 from utils import assume_role, genpass
 import botocore
 
@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     except botocore.exceptions.ClientError as e:
         return {
             'statusCode': 400,
-            'body': errorResponse(e)
+            'body': json.dumps(errorResponse(e))
         }
 
     return {
@@ -25,12 +25,8 @@ def lambda_handler(event, context):
     
 def createCloudWatchAccount(AWSAccountId,username):
 
-    print(AWSAccountId, username)
-    
     session = assume_role(str(AWSAccountId))
 
-    #catch AccessDenied assume role not allowed
-    
     iam = session.client('iam')
     
     iam.create_user(UserName = username)
@@ -56,4 +52,22 @@ def createCloudWatchAccount(AWSAccountId,username):
     }
 
     return response
+
+def deleteUserCloudWatchAccount(AWSAccountId,username):
+    
+    session = assume_role(str(AWSAccountId))
+
+    iam = session.client('iam')
+    
+    response = iam.delete_user(
+        UserName= username
+    )
+    
+    response = {
+        'accountId': AWSAccountId,
+        'username' : username
+    }
+
+    return response
+
     
