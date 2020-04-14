@@ -59,9 +59,7 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
 
     iam = session.client('iam')
     
-    response = iam.delete_user(
-        UserName= username
-    )
+    iam.delete_user(UserName= username)
     
     response = {
         'accountId': AWSAccountId,
@@ -70,4 +68,26 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
 
     return response
 
+def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
+    
+    session = assume_role(str(AWSAccountId))
+
+    iam = session.client('iam')
+
+    login_profile = iam.LoginProfile('user_name')
+
+    password = genpass(8)
+
+    login_profile.update(
+        Password = password,
+        PasswordResetRequired=True
+    )
+
+    response = {
+        'accountId': AWSAccountId,
+        'username' : username,
+        'password': password
+    }
+
+    return response
     
