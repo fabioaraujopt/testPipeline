@@ -29,6 +29,7 @@ def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
 
     iam = session.client('iam')
 
+    #if exists:
     iam.delete_login_profile(
         UserName=username
     )

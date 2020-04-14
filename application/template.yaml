@@ -18,6 +18,7 @@ Resources:
       CodeUri: ./lambda
       Handler: createUser.lambda_handler
       Runtime: python3.6
+      Role: !GetAtt CWUserFunctionRole.Arn
       Events:
         CreateUser:
           Type: Api 
@@ -31,6 +32,7 @@ Resources:
       CodeUri: ./lambda
       Handler: resetUserPassword.lambda_handler
       Runtime: python3.6
+      Role: !GetAtt CWUserFunctionRole.Arn
       Events:
         CreateUser:
           Type: Api 
@@ -44,6 +46,7 @@ Resources:
       CodeUri: ./lambda
       Handler: deleteUser.lambda_handler
       Runtime: python3.6
+      Role: !GetAtt CWUserFunctionRole.Arn
       Events:
         CreateUser:
           Type: Api 
@@ -51,6 +54,27 @@ Resources:
             Path: /cwuser
             Method: DELETE
   
+  CWUserFunctionRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                  - Effect: 'Allow'
+                    Principal: {Service: ['lambda.amazonaws.com', 'apigateway.amazonaws.com'] }
+                    Action: ['sts:AssumeRole']
+            ManagedPolicyArns:
+              - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+            Policies:
+              - PolicyName: cw_users_function_assume_role
+                PolicyDocument:
+                    Version: '2012-10-17'
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'sts:AssumeRole'
+                        Resource:
+                          - 'arn:aws:iam::*:role/CWUsers'
 
 #TODO: Get api ids and add this schema to the generated apis
   #RequestValidator:

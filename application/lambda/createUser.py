@@ -28,8 +28,8 @@ def createCloudWatchAccount(AWSAccountId,username):
 
     iam = session.client('iam')
     
+    #if exists reset
     iam.create_user(UserName = username)
-    
     
     response = iam.add_user_to_group(
         GroupName=groupName,
@@ -38,11 +38,13 @@ def createCloudWatchAccount(AWSAccountId,username):
     
     password = genpass(8)
     
+    #if login pri
     login_profile = iam.create_login_profile(
         UserName=username,
         Password=genpass(8),
         PasswordResetRequired=True
     )
+    #todo if do not exist update
 
     response = {
         'accountId': AWSAccountId,
