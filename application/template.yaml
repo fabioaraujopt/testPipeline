@@ -12,30 +12,44 @@ Globals:
     Timeout: 3
 
 Resources:
-  CWUsers:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    #Todo place role
+  createCWUser:
+    Type: AWS::Serverless::Function 
     Properties:
       CodeUri: ./lambda
-      Handler: app.lambda_handler
+      Handler: createUser.lambda_handler
       Runtime: python3.6
       Events:
         CreateUser:
           Type: Api 
           Properties:
             Path: /cwuser
-            Method: post
-        ResetUserPassword:
+            Method: POST
+
+  resetPasswordCWUser:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambda
+      Handler: resetUserPassword.lambda_handler
+      Runtime: python3.6
+      Events:
+        CreateUser:
           Type: Api 
           Properties:
             Path: /cwuser
-            Method: put
-        DeleteUser:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Method: PUT
+
+  deleteCWUser:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./lambda
+      Handler: deleteUser.lambda_handler
+      Runtime: python3.6
+      Events:
+        CreateUser:
+          Type: Api 
           Properties:
             Path: /cwuser
-            Method: delete
-
+            Method: DELETE
   
 
 #TODO: Get api ids and add this schema to the generated apis

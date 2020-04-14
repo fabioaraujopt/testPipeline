@@ -11,7 +11,8 @@ def errorResponse(exception):
         error_message = "Username already exists"
     if(errorCode == "NoSuchEntity"):
         error_message = "Username do not exists"
-        
+    if(errorCode == "EntityTemporarilyUnmodifiable"):
+        error_message = "User cannot be modified"
     else:
         error_message = errorCode
 
