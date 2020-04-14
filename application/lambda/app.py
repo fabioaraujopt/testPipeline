@@ -17,12 +17,9 @@ def lambda_handler(event, context):
             'body': e.response['Error']['Code']
         }
 
-    print (credentials)
-    print (json.dumps(credentials))
-
     return {
         'statusCode': 200,
-        'body': credentials
+        'body': json.dumps(credentials)
     }
     
 def createCloudWatchAccount(AWSAccountId,username):
