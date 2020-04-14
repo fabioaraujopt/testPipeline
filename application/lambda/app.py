@@ -48,7 +48,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     )
 
     response = {
-        'username' : login_profile['LoginProfile'],
+        'username' : login_profile['LoginProfile']['UserName'],
         'accountId': AWSAccountId,
         'password': password
     }
