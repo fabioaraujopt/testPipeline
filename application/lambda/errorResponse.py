@@ -9,7 +9,9 @@ def errorResponse(exception):
         error_message = "Access denied for account"
     if(errorCode == "EntityAlreadyExists"):
         error_message = "Username already exists"
-        
+    else:
+        error_message = "Undefined"
+
     return {
         "error_message": error_message
     }

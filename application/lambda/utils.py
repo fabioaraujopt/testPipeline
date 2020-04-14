@@ -44,3 +44,5 @@ def genpass(length):
     return password
     
 #TODO error parser
+    #user not found 400
+    #not role sts 400
