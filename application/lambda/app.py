@@ -5,12 +5,16 @@ from utils import assume_role, genpass
 
 
 def lambda_handler(event, context):
-
-    eventBody = json.loads(event["body"])
     #validate payload
+    eventBody = json.loads(event["body"])
 
-    createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
-
+    try:
+        credentials = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    except expression as identifier:
+        return {
+            'statusCode': 400,
+            'body': identifier
+        }
 
 
     return {

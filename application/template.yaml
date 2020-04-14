@@ -19,7 +19,6 @@ Resources:
       CodeUri: ./lambda
       Handler: app.lambda_handler
       Runtime: python3.6
-      #Role: !GetAtt CWUsersLambdaExecutionRole.Arn
       Events:
         CreateUser:
           Type: Api 
