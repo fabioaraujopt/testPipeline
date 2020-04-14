@@ -7,11 +7,11 @@ def errorResponse(exception):
     
     if(errorCode == "AccessDenied"):
         error_message = "Access denied for account"
-    if(errorCode == "EntityAlreadyExists"):
+    elif(errorCode == "EntityAlreadyExists"):
         error_message = "Username already exists"
-    if(errorCode == "NoSuchEntity"):
+    elif(errorCode == "NoSuchEntity"):
         error_message = "Username do not exists"
-    if(errorCode == "EntityTemporarilyUnmodifiable"):
+    elif(errorCode == "EntityTemporarilyUnmodifiable"):
         error_message = "User cannot be modified"
     else:
         error_message = errorCode
