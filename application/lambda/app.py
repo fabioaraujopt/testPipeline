@@ -1,6 +1,7 @@
 import json
 import string
 import random
+import errorResponse
 from utils import assume_role, genpass
 import botocore
 
@@ -14,7 +15,7 @@ def lambda_handler(event, context):
     except botocore.exceptions.ClientError as e:
         return {
             'statusCode': 400,
-            'body': e.response['Error']['Code']
+            'body': errorResponse(e)
         }
 
     return {
@@ -49,8 +50,8 @@ def createCloudWatchAccount(AWSAccountId,username):
     )
 
     response = {
-        'username' : login_profile['LoginProfile']['UserName'],
         'accountId': AWSAccountId,
+        'username' : login_profile['LoginProfile']['UserName'],
         'password': password
     }
 
