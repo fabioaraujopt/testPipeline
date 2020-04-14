@@ -19,7 +19,7 @@ Resources:
       CodeUri: ./lambda
       Handler: app.lambda_handler
       Runtime: python3.6
-      Role: !GetAtt CWUsersLambdaExecutionRole.Arn
+      #Role: !GetAtt CWUsersLambdaExecutionRole.Arn
       Events:
         CreateUser:
           Type: Api 
@@ -37,37 +37,7 @@ Resources:
             Path: /cwuser
             Method: delete
 
-  CWUsersLambdaExecutionRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-              - lambda.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Path: "/"
-      Policies:
-        - PolicyName: CWUsersPolicie
-          PolicyDocument:
-            PolicyDocument:
-              Version: 2012-10-17
-              Statement:
-                - Effect: Allow
-                  Action:
-                    -  "iam:AddUserToGroup"
-                    -  "iam:RemoveUserFromGroup"
-                    -  "iam:UpdateUser"
-                    -  "iam:DeleteUser"
-                    -  "iam:CreateUser"
-                    -  "iam:ChangePassword"
-                    -  "iam:UpdateLoginProfile"
-                    -  "iam:CreateLoginProfile"
-                    -  "iam:DeleteLoginProfile"
-                  Resource: '*'
+  
 
 #TODO: Get api ids and add this schema to the generated apis
   #RequestValidator:
