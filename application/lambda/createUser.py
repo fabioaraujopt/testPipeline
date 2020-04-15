@@ -30,15 +30,15 @@ def createCloudWatchAccount(AWSAccountId,username):
     #list users
     #users = client.list_users()
 
-    iam = session.client('iam')
+    iamClient = session.client('iam')
+    iam = boto3.resource('iam')
 
     try:
         iamGroup = iam.Group("adfdfadsf")
+        print(iamGroup)
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchEntity':
-            groupUsers = iam.create_group(
-                GroupName="adfdfadsf"
-            )
+            groupUsers = iam.Group("adfdfadsf").create()
             #group_policy = group.create_policy(
             #    PolicyName='string',
             #    PolicyDocument='string'
