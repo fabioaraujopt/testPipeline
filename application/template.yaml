@@ -123,6 +123,15 @@ Resources:
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
   
+   # API Stage Deployment
+  RdsOperationsApiGatewayBetaStageDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - CWUsersPOSTApiGatewayMethod
+    Properties:
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      Description: "Deploy api gateway rest api"
+      StageName: "alpha"
   
   
 
