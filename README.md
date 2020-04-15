@@ -18,4 +18,9 @@ Error Codes:
 403 - Account denied action
 
 
-
+Error template: 
+{
+    Errors: ["Author with id 31 not found."],
+    StatusCode: "404",
+    ErrorCode: "authorNotFound"
+}
