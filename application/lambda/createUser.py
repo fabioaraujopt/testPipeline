@@ -33,15 +33,17 @@ def createCloudWatchAccount(AWSAccountId,username):
     iam = session.client('iam')
 
     try:
-        groupUsers = iam.get_group(
-            GroupName="coisa"
-        )
+        iamGroup = iam.Group("adfdfadsf")
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchEntity':
             groupUsers = iam.create_group(
-                GroupName="coisa"
+                GroupName="adfdfadsf"
             )
-            
+            #group_policy = group.create_policy(
+            #    PolicyName='string',
+            #    PolicyDocument='string'
+            #)
+           
     iamGroup = iam.get_group(
             GroupName=groupName
         )
@@ -57,11 +59,20 @@ def createCloudWatchAccount(AWSAccountId,username):
 
     print ('is username in group', username, isUsernameInGroup(iamGroup,username))
 
+
+
     return True
 
-    
-    #if user do not exists (create user)
+    #simular não existir grupo 
+    #não existir 
+
+    #check if user exists
     iam.create_user(UserName = username)
+
+    if not isUsernameInGroup(iamGroup,username):
+        iam.add_user_to_group(GroupName=groupName,UserName=username)
+
+   
     
     #if group exists and user not in group
     #if group do not exists create it

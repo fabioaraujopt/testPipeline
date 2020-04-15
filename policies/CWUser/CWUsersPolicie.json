@@ -22,7 +22,8 @@
                 "iam:ListGroups",
                 "iam:DeleteLoginProfile",
                 "iam:ChangePassword",
-                "iam:GetGroup"
+                "iam:GetGroup",
+                "iam:CreateGroup"
             ],
             "Resource": "*"
         }
