@@ -153,7 +153,6 @@ Resources:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Schema: 
         $schema: http://json-schema.org/draft-07/schema
-        $id: http://example.com/example.json
         type: object
         title: cw users schema
         description: The root schema comprises the entire JSON document.
@@ -164,21 +163,15 @@ Resources:
         - accountId
         properties:
           username:
-            "$id": "#/properties/username"
             type: string
             title: The Username Schema
             description: An explanation about the purpose of this instance.
             default: ''
-            examples:
-            - coisa
           accountId:
-            "$id": "#/properties/accountId"
             type: string
             title: The Accountid Schema
             description: An explanation about the purpose of this instance.
             default: ''
-            examples:
-            - '123123123'
 
   CWUsersPUTApiGatewayMethod:
     Type: AWS::ApiGateway::Method
