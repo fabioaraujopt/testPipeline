@@ -4,7 +4,7 @@ CWUsers API Idempotence
 				 if not exists create user normally
 				 if exists reset password and return as created (201)
 
--PATCH  cwuser --> update user pw - if exists update pw normally
+-PATCH  cwuser --> update user pw - if exists and belongs to group update pw normally			
 				  - if not exists create user and return as updated (200)
 
 -DELETE cwuser --> delete user - if exists delete normally
@@ -16,7 +16,7 @@ If Entity "EntityTemporarilyUnmodifiable" -> wait(x ms) and retry request
 Error Codes:
 401 - Unauthorized (api gateway validation failed) 
 403 - Account denied action
-
+500 - x
 
 Error template: 
 {
@@ -24,3 +24,6 @@ Error template:
     StatusCode: "404",
     ErrorCode: "authorNotFound"
 }
+
+apply versioned? 
+/v1/cwusers/
