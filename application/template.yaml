@@ -75,7 +75,27 @@ Resources:
                           - 'sts:AssumeRole'
                         Resource:
                           - 'arn:aws:iam::*:role/CWUsers'
+  
+  RdsOperationsApiGatewayRestApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: "CWUsersApi"
+      Policy: {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "execute-api:Invoke",
+                "Resource": "execute-api:/*/*/*",
+            }
+        ]
+      }
+  
 
+
+
+    
 #TODO: Get api ids and add this schema to the generated apis
   #RequestValidator:
   #  Type: AWS::ApiGateway::Model

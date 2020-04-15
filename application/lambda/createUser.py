@@ -32,6 +32,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     iam.create_user(UserName = username)
     
     #if group exists and user not in group
+    #if group do not exists create it
     response = iam.add_user_to_group(
         GroupName=groupName,
         UserName=username
