@@ -30,6 +30,11 @@ def assume_role(account_id):
         aws_session_token=creds["SessionToken"])
     return session
 
+def isUsernameInGroup(iamGroup, username):
+    for user in iamGroup["Users"]:
+        if user["UserName"] == username:
+            return True
+    return False
 
 def genpass(length):
     """Generate a random password.

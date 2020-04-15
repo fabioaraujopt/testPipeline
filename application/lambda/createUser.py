@@ -2,7 +2,7 @@ import json
 import botocore
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass
+from utils import assume_role, genpass, isUsernameInGroup
 
 groupName = 'CloudWatchMonitor'
 
@@ -37,17 +37,25 @@ def createCloudWatchAccount(AWSAccountId,username):
             GroupName="coisa"
         )
     except ClientError as e:
-        if e.response['Error']['Code'] == 'EntityAlreadyExists':
+        if e.response['Error']['Code'] == 'NoSuchEntity':
             groupUsers = iam.create_group(
                 GroupName="coisa"
             )
-
             
-    groupUsers = iam.get_group(
+    iamGroup = iam.get_group(
             GroupName=groupName
         )
-        
+    
+    
     print('not existent group', groupUsers)
+
+    username = "joao"
+
+    print ('is username in group', username, isUsernameInGroup(iamGroup,username))
+
+    username = "fasdfasdfasdfa"
+
+    print ('is username in group', username, isUsernameInGroup(iamGroup,username))
 
     return True
 
