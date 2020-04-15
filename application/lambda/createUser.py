@@ -23,7 +23,22 @@ def createCloudWatchAccount(AWSAccountId,username):
 
     session = assume_role(str(AWSAccountId))
 
+    #verifiy if group and role exists
+    #good stuff https://stackoverflow.com/questions/46073435/how-can-we-fetch-iam-users-their-groups-and-policies
+
+    #list users
+    #users = client.list_users()
+
     iam = session.client('iam')
+
+    response = iam.get_group(
+        GroupName=groupName
+    )
+
+    print(response)
+
+    return True
+
     
     #if user do not exists (create user)
     iam.create_user(UserName = username)
