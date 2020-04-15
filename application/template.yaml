@@ -140,11 +140,11 @@ Resources:
 
   CWUsersApiValidator:
     Type: AWS::ApiGateway::RequestValidator
-      Properties: 
-        Name: String
-        RestApiId: !Ref CWUsersApiGatewayRestApi
-        ValidateRequestBody: true
-        ValidateRequestParameters: false
+    Properties: 
+      Name: String
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      ValidateRequestBody: true
+      ValidateRequestParameters: false
   
   CWUsersRequestModel:
     Type: AWS::ApiGateway::Model
