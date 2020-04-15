@@ -12,7 +12,7 @@ Globals:
     Timeout: 3
 
 Resources:
-  createCWUser:
+  createCWUserFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: ./lambda
@@ -26,7 +26,15 @@ Resources:
             Path: /cwuser
             Method: POST
 
-  resetPasswordCWUser:
+  createCWUserFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt 'createCWUserFunction.Arn'
+      Principal:  apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
+
+  resetPasswordCWUserFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: ./lambda
@@ -40,7 +48,7 @@ Resources:
             Path: /cwuser
             Method: PUT
 
-  deleteCWUser:
+  deleteCWUserFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: ./lambda
@@ -75,8 +83,8 @@ Resources:
                           - 'sts:AssumeRole'
                         Resource:
                           - 'arn:aws:iam::*:role/CWUsers'
-  
-  RdsOperationsApiGatewayRestApi:
+
+  CWUsersApiGatewayRestApi:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
       Name: "CWUsersApi"
@@ -91,8 +99,61 @@ Resources:
             }
         ]
       }
-  
+  # API Authorizer
+  CWUsersApiGatewayAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      AuthorizerResultTtlInSeconds: 0
+      AuthorizerUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIAuthorizerFunction.Arn}/invocations"
+      IdentitySource: method.request.header.Authorization
+      Name: cwusers-authorizer
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      Type: TOKEN
 
+  APIAuthorizerFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: ./lambda
+      MemorySize: 128
+      Handler: authorizer.lambda_handler
+      Role: !GetAtt CWUserFunctionRole.Arn
+      Timeout: 300
+      Runtime: python3.7
+      FunctionName: cwusers_api_authorizer
+
+  ApiAuthorizerFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt 'APIAuthorizerFunction.Arn'
+      Principal:  apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
+
+    
+  CWUsersApiGatewayResource: 
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt CWUsersApiGatewayRestApi.RootResourceId
+      PathPart: cwusers
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+
+
+  CWUsersPOSTApiGatewayMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      HttpMethod: POST
+      ResourceId: !Ref  CWUsersApiGatewayResource
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
+  
+  
+  
 
 
     
