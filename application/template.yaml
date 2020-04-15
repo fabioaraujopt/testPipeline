@@ -137,6 +137,14 @@ Resources:
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
       RequestModels: !Ref CWUsersRequestModel
+
+  CWUsersApiValidator:
+    Type: AWS::ApiGateway::RequestValidator
+      Properties: 
+        Name: String
+        RestApiId: !Ref CWUsersApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
   
   CWUsersRequestModel:
     Type: AWS::ApiGateway::Model
