@@ -35,7 +35,12 @@ def createCloudWatchAccount(AWSAccountId,username):
         GroupName=groupName
     )
 
-    print(response)
+    print('existent group', response)
+
+    response = iam.get_group(
+        GroupName="merda"
+    )
+    print('not existent group', response)
 
     return True
 
