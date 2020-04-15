@@ -136,13 +136,13 @@ Resources:
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
-      RequestModels: !ref CWUsersRequestModel
+      RequestModels: !Ref CWUsersRequestModel
   
   CWUsersRequestModel:
     Type: AWS::ApiGateway::Model
     Properties: 
       ContentType: "application/json"
-      RestApiId: !ref CWUsersApiGatewayRestApi
+      RestApiId: !Ref CWUsersApiGatewayRestApi
       Schema: 
         $schema: http://json-schema.org/draft-07/schema
         $id: http://example.com/example.json
