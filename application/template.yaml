@@ -136,7 +136,7 @@ Resources:
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
-      RequestModels: !Ref CWUsersRequestModel
+      RequestModels: CWUsersRequestModel
 
   CWUsersApiValidator:
     Type: AWS::ApiGateway::RequestValidator
@@ -146,44 +146,37 @@ Resources:
       ValidateRequestBody: true
       ValidateRequestParameters: false
   
-  CWUsersRequestModel:
+  CWUsersRequestModel: 
     Type: AWS::ApiGateway::Model
     Properties: 
+      RestApiId: !Ref: CWUsersApiGatewayRestApi
       ContentType: "application/json"
-      RestApiId: !Ref CWUsersApiGatewayRestApi
+      Description: "CWUser Request Model"
+      Name: CWUserModel
       Schema: 
-        $schema: http://json-schema.org/draft-07/schema
+        "$schema": http://json-schema.org/draft-04/schema#
         type: object
-        title: cw users schema
-        description: The root schema comprises the entire JSON document.
-        default: {}
-        additionalProperties: true
-        required:
-        - username
-        - accountId
         properties:
           username:
             type: string
-            title: The Username Schema
-            description: An explanation about the purpose of this instance.
-            default: ''
           accountId:
             type: string
-            title: The Accountid Schema
-            description: An explanation about the purpose of this instance.
-            default: ''
+        required:
+          - username
+          - accountId
+        
 
-  CWUsersPUTApiGatewayMethod:
+  CWUsersPATCHApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
-      HttpMethod: PUT
+      HttpMethod: PATCH
       ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: PUT
+        IntegrationHttpMethod: PATCH
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
 
@@ -205,7 +198,7 @@ Resources:
   CwUsersApiGatewayBetaStageDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
-      - CWUsersPUTApiGatewayMethod
+      - CWUsersPATCHApiGatewayMethod
       - CWUsersPOSTApiGatewayMethod
       - CWUsersDELETEApiGatewayMethod
     Properties:
