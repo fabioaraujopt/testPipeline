@@ -136,7 +136,9 @@ Resources:
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
-      RequestModels: CWUsersRequestModel
+      RequestModels: 
+        application/json: !Ref CWUsersRequestModel
+    
 
   CWUsersApiValidator:
     Type: AWS::ApiGateway::RequestValidator
