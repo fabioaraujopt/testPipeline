@@ -9,15 +9,15 @@ from operations.rdsops_operations import *
 
 # necessary capabilities to perform an api operation (POST and GET methods)
 API_OPERATION_POST_CAPABILITIES = {
-    "add-rds": ["45f6a84e-2481-11e9-ab14-d663bd873d93"],
-    "remove-rds": ["45f6af38-2481-11e9-ab14-d663bd873d93"],
+    "cwusers": ["45f6a84e-2481-11e9-ab14-d663bd873d93"]
 }
 
-API_OPERATION_GET_CAPABILITIES = {
-    "add-vpn": ["a6506df1-dd59-4506-bbc0-2913b542f12b"],
-    "remove-vpn": ["b3495766-d002-4230-b257-31b3c3c5e2d7"],
-    "add-route": ["cf1b2e73-6cfb-4959-8f13-ad0c81cd8af9"],
-    "remove-route": ["f43f8018-a0fd-49ae-9d75-c44cf140f237"],
+API_OPERATION_PUT_CAPABILITIES = {
+    "cwusers": ["a6506df1-dd59-4506-bbc0-2913b542f12b"]
+}
+
+API_OPERATION_DELETE_CAPABILITIES = {
+    "cwusers": ["a6506df1-dd59-4506-bbc0-2913b542f12b"]
 }
 
 log = logging.getLogger(__name__)
