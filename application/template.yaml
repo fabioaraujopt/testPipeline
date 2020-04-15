@@ -35,6 +35,14 @@ Resources:
       Handler: resetUserPassword.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
+  
+  resetPasswordCWUserFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt 'resetPasswordCWUserFunction.Arn'
+      Principal:  apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
   deleteCWUserFunction:
     Type: AWS::Serverless::Function 
@@ -44,6 +52,13 @@ Resources:
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
 
+  deleteCWUserFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt 'deleteCWUserFunction.Arn'
+      Principal:  apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
 
   CWUserFunctionRole:
@@ -122,6 +137,34 @@ Resources:
         IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
+  
+  CWUsersPUTApiGatewayMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      HttpMethod: PUT
+      ResourceId: !Ref  CWUsersApiGatewayResource
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
+      Integration:
+        IntegrationHttpMethod: PUT
+        Type: AWS_PROXY
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
+
+  CWUsersPUTApiGatewayMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      ApiKeyRequired: false
+      HttpMethod: DELETE
+      ResourceId: !Ref  CWUsersApiGatewayResource
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
+      Integration:
+        IntegrationHttpMethod: DELETE
+        Type: AWS_PROXY
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteCWUserFunction.Arn}/invocations"
   
    # API Stage Deployment
   RdsOperationsApiGatewayBetaStageDeployment:
