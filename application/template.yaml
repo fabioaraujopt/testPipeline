@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   os-cloud-cwusers
@@ -13,7 +13,7 @@ Globals:
 
 Resources:
   createCWUserFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
       Handler: createUser.lambda_handler
@@ -24,28 +24,28 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt 'createCWUserFunction.Arn'
-      Principal:  apigateway.amazonaws.com
+      FunctionName: !GetAtt "createCWUserFunction.Arn"
+      Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
   resetPasswordCWUserFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
       Handler: resetUserPassword.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
-  
+
   resetPasswordCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt 'resetPasswordCWUserFunction.Arn'
-      Principal:  apigateway.amazonaws.com
+      FunctionName: !GetAtt "resetPasswordCWUserFunction.Arn"
+      Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
   deleteCWUserFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
       Handler: deleteUser.lambda_handler
@@ -56,35 +56,35 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt 'deleteCWUserFunction.Arn'
-      Principal:  apigateway.amazonaws.com
+      FunctionName: !GetAtt "deleteCWUserFunction.Arn"
+      Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
-
   CWUserFunctionRole:
-        Type: AWS::IAM::Role
-        Properties:
-            AssumeRolePolicyDocument:
-                Version: '2012-10-17'
-                Statement:
-                  - Effect: 'Allow'
-                    Principal: {Service: ['lambda.amazonaws.com', 'apigateway.amazonaws.com'] }
-                    Action: ['sts:AssumeRole']
-            ManagedPolicyArns:
-              - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-            Policies:
-              - PolicyName: cw_users_function_assume_role
-                PolicyDocument:
-                    Version: '2012-10-17'
-                    Statement:
-                      - Effect: Allow
-                        Action:
-                          - 'sts:AssumeRole'
-                        Resource:
-                          - 'arn:aws:iam::*:role/CWUsers'
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              { Service: ["lambda.amazonaws.com", "apigateway.amazonaws.com"] }
+            Action: ["sts:AssumeRole"]
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+        - PolicyName: cw_users_function_assume_role
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sts:AssumeRole"
+                Resource:
+                  - "arn:aws:iam::*:role/CWUsers"
 
   CWUsersApiGatewayRestApi:
-    Type: 'AWS::ApiGateway::RestApi'
+    Type: "AWS::ApiGateway::RestApi"
     Properties:
       Name: "CWUsersApi"
 
@@ -100,9 +100,9 @@ Resources:
       Type: TOKEN
 
   APIAuthorizerFunction:
-    Type: 'AWS::Serverless::Function'
+    Type: "AWS::Serverless::Function"
     Properties:
-      CodeUri: ./lambda
+      CodeUri: ./lambda/auth
       Handler: authorizer.lambda_handler
       Role: !GetAtt CWUserFunctionRole.Arn
       Runtime: python3.6
@@ -111,25 +111,23 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt 'APIAuthorizerFunction.Arn'
-      Principal:  apigateway.amazonaws.com
+      FunctionName: !GetAtt "APIAuthorizerFunction.Arn"
+      Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
-    
-  CWUsersApiGatewayResource: 
-    Type: 'AWS::ApiGateway::Resource'
+  CWUsersApiGatewayResource:
+    Type: "AWS::ApiGateway::Resource"
     Properties:
       ParentId: !GetAtt CWUsersApiGatewayRestApi.RootResourceId
       PathPart: cwusers
       RestApiId: !Ref CWUsersApiGatewayRestApi
 
-
   CWUsersPOSTApiGatewayMethod:
-    Type: 'AWS::ApiGateway::Method'
+    Type: "AWS::ApiGateway::Method"
     Properties:
       ApiKeyRequired: false
       HttpMethod: POST
-      ResourceId: !Ref  CWUsersApiGatewayResource
+      ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -137,13 +135,13 @@ Resources:
         IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
-  
+
   CWUsersPUTApiGatewayMethod:
-    Type: 'AWS::ApiGateway::Method'
+    Type: "AWS::ApiGateway::Method"
     Properties:
       ApiKeyRequired: false
       HttpMethod: PUT
-      ResourceId: !Ref  CWUsersApiGatewayResource
+      ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -153,11 +151,11 @@ Resources:
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
 
   CWUsersDELETEApiGatewayMethod:
-    Type: 'AWS::ApiGateway::Method'
+    Type: "AWS::ApiGateway::Method"
     Properties:
       ApiKeyRequired: false
       HttpMethod: DELETE
-      ResourceId: !Ref  CWUsersApiGatewayResource
+      ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -165,8 +163,8 @@ Resources:
         IntegrationHttpMethod: DELETE
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteCWUserFunction.Arn}/invocations"
-  
-   # API Stage Deployment
+
+    # API Stage Deployment
   RdsOperationsApiGatewayBetaStageDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
@@ -177,26 +175,21 @@ Resources:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Description: "Deploy api gateway rest api"
       StageName: "alpha"
-  
-  
-
-
-    
 #TODO: Get api ids and add this schema to the generated apis
-  #RequestValidator:
-  #  Type: AWS::ApiGateway::Model
-  #  Properties:
-  #    ContentType: "application/json"
-  #   Name: "CWUserApiValidator"
-  #    Schema:
-  #      $schema: "http://json-schema.org/draft-04/schema#"
-  #      title: Application Json
-  #      required:
-  #        - token
-  #        - username
-  #      type: object
-  #      properties:
-  #        token:
-  #          type: string
-  #        username:
-  #          type: string
+#RequestValidator:
+#  Type: AWS::ApiGateway::Model
+#  Properties:
+#    ContentType: "application/json"
+#   Name: "CWUserApiValidator"
+#    Schema:
+#      $schema: "http://json-schema.org/draft-04/schema#"
+#      title: Application Json
+#      required:
+#        - token
+#        - username
+#      type: object
+#      properties:
+#        token:
+#          type: string
+#        username:
+#          type: string
