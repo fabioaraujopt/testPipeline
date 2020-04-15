@@ -19,12 +19,6 @@ Resources:
       Handler: createUser.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
-      Events:
-        CreateUser:
-          Type: Api 
-          Properties:
-            Path: /cwuser
-            Method: POST
 
   createCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -41,12 +35,6 @@ Resources:
       Handler: resetUserPassword.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
-      Events:
-        CreateUser:
-          Type: Api 
-          Properties:
-            Path: /cwuser
-            Method: PUT
 
   deleteCWUserFunction:
     Type: AWS::Serverless::Function 
@@ -55,13 +43,9 @@ Resources:
       Handler: deleteUser.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
-      Events:
-        CreateUser:
-          Type: Api 
-          Properties:
-            Path: /cwuser
-            Method: DELETE
-  
+
+
+
   CWUserFunctionRole:
         Type: AWS::IAM::Role
         Properties:
@@ -88,6 +72,7 @@ Resources:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
       Name: "CWUsersApi"
+
   # API Authorizer
   CWUsersApiGatewayAuthorizer:
     Type: AWS::ApiGateway::Authorizer
@@ -103,12 +88,9 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: ./lambda
-      MemorySize: 128
       Handler: authorizer.lambda_handler
       Role: !GetAtt CWUserFunctionRole.Arn
-      Timeout: 300
-      Runtime: python3.7
-      FunctionName: cwusers_api_authorizer
+      Runtime: python3.6
 
   ApiAuthorizerFunctionPermission:
     Type: AWS::Lambda::Permission
