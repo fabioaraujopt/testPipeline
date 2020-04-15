@@ -31,7 +31,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     #users = client.list_users()
 
     iamClient = session.client('iam')
-    iam = boto3.resource('iam')
+    iam = session.resource('iam')
 
     try:
         iamGroup = iam.Group("adfdfadsf")
