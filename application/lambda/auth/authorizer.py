@@ -2,9 +2,9 @@ import logging
 import re
 import uuid
 import boto3
-import auth
+#import auth
 
-from operations.rdsops_operations import *
+#from operations.rdsops_operations import *
 
 
 # necessary capabilities to perform an api operation (POST and GET methods)
@@ -26,6 +26,20 @@ ssm_client = boto3.client('ssm')
 
 
 def lambda_handler(event, context):
+
+    return {
+      "principalId": "user",
+      "policyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Action": "execute-api:Invoke",
+            "Effect": "Allow",
+            "Resource": "arn:aws:execute-api:us-east-1:756050260009:dtbg7rf2di/*/*/cwusers"
+          }
+        ]
+      }
+    }
 
     '''
     Typically the event has 3 keys:
