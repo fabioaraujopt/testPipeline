@@ -9,7 +9,7 @@ phases:
         commands:
           - cd $CODEBUILD_SRC_DIR
           - echo "Starting build `date` in `pwd`"
-          - pip install -r lambda/auth/requirements.pip
+          - pip install -r application/lambda/auth/requirements.pip
           - aws cloudformation package
                 --s3-bucket=${BUILD_OUTPUT_BUCKET}
                 --s3-prefix=${BUILD_OUTPUT_PREFIX}
