@@ -181,6 +181,8 @@ Resources:
         IntegrationHttpMethod: PATCH
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
+      RequestModels: 
+        application/json: !Ref CWUsersRequestModel
 
   CWUsersDELETEApiGatewayMethod:
     Type: "AWS::ApiGateway::Method"
@@ -195,6 +197,8 @@ Resources:
         IntegrationHttpMethod: DELETE
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteCWUserFunction.Arn}/invocations"
+      RequestModels: 
+        application/json: !Ref CWUsersRequestModel
 
     # API Stage Deployment
   CwUsersApiGatewayBetaStageDeployment:
