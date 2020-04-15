@@ -149,7 +149,7 @@ Resources:
   CWUsersRequestModel: 
     Type: AWS::ApiGateway::Model
     Properties: 
-      RestApiId: !Ref: CWUsersApiGatewayRestApi
+      RestApiId: !Ref CWUsersApiGatewayRestApi
       ContentType: "application/json"
       Description: "CWUser Request Model"
       Name: CWUserModel
