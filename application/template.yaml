@@ -180,9 +180,8 @@ Resources:
             examples:
             - '123123123'
 
-        
   CWUsersPUTApiGatewayMethod:
-    Type: "AWS::ApiGateway::Method"
+    Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
       HttpMethod: PUT
