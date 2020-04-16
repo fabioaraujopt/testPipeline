@@ -33,7 +33,8 @@
                 "iam:ListGroups",
                 "iam:GetGroupPolicy",
                 "iam:GetUser",
-                "iam:GetLoginProfile"
+                "iam:GetLoginProfile",
+                "iam:DetachUserPolicy"
             ],
             "Resource": "*"
         }

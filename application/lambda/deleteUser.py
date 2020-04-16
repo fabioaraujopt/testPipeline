@@ -53,8 +53,9 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
 
     try:
         user.LoginProfile().load()
-    except:
         user.LoginProfile().delete()
+    except:
+        pass
     
     user.delete()
 
