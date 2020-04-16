@@ -3,7 +3,8 @@ import botocore
 from errorResponse import errorResponse
 from utils import assume_role, genpass
 
-groupName = 'CloudWatchMonitor'
+userPolicyName = "testPolicy" #.env
+lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
@@ -25,28 +26,42 @@ def lambda_handler(event, context):
 
 def deleteUserCloudWatchAccount(AWSAccountId,username):
     
-    session = assume_role(str(AWSAccountId))
+    session = assume_role(AWSAccountId,lambdaRoleName)
 
-    iam = session.client('iam')
-    
-    #if user exists
-    iam.delete_login_profile(
-        UserName=username
-    )  
-    
-    #if user is in group
-    iam.remove_user_from_group(
-        GroupName=groupName,
-        UserName=username
-    )
+    iam = session.resource('iam')
 
-    #if user exists
-    iam.delete_user(UserName= username)
+    user = iam.User(username)
+
+    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,userPolicyName)
+
+    try:
+        user.load()
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchEntity':
+            return {
+                'accountId': AWSAccountId,
+                'username' : username,
+            }
     
-    #if user not in user list
-    response = {
+    try:
+        user.detach_policy(PolicyArn=policyArn)
+    except:
+        if e.response['Error']['Code'] == 'NoSuchEntity':
+            pass
+
+    try:
+        user.LoginProfile().load()
+    except:
+        user.LoginProfile().delete()
+    
+    user.delete()
+
+    return {
         'accountId': AWSAccountId,
-        'username' : username
-    }
+        'username' : username,
+        }
+    
+    
 
-    return response
+
+

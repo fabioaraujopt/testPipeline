@@ -8,7 +8,7 @@ CWUsers API Idempotence
 
 -POST (accountId) update role_policie -> 
 
--PATCH  cwuser --> update user pw
+-PATCH  cwuser -->  update user pw
 					if exists and belongs to group update pw normally			
 				    if not exists (404)
 
