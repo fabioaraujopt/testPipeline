@@ -5,10 +5,10 @@ import string
 import random
 
 
-def assume_role(account_id):
+def assume_role(account_id,role_to_assume):
     sts = boto3.client("sts")
     
-    role_arn = "arn:aws:iam::{}:role/CWUsers".format(account_id)
+    role_arn = "arn:aws:iam::{}:role/{}".format(account_id,role_to_assume)
 
     try:
         resp = sts.assume_role(
