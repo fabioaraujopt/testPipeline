@@ -1,13 +1,18 @@
 import json
-import botocore
-from botocore.exceptions import ClientError
-from errorResponse import errorResponse
-from utils import assume_role, genpass
+#import botocore
+#from botocore.exceptions import ClientError
+#from errorResponse import errorResponse
+#from utils import assume_role, genpass
 import os
 
 userPolicyName = "testPolicy" #.env
 lambdaRoleName = "CWUsers" #.env
 
+with open('./policies/CWUser.json') as f:
+        repoPolicy = json.load(f)
+
+
+"""
 def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
@@ -74,4 +79,4 @@ def createCloudWatchAccount(AWSAccountId,username):
         'password': password
     }
 
-
+"""
