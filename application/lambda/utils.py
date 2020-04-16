@@ -48,7 +48,3 @@ def genpass(length):
     for i in range(length):
         password += random.choice(choice)
     return password
-    
-#TODO error parser
-    #user not found 400
-    #not role sts 400
