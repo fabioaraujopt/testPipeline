@@ -181,6 +181,7 @@ Resources:
         IntegrationHttpMethod: PATCH
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
+      RequestValidatorId: !Ref CWUsersApiValidator
       RequestModels: 
         application/json: !Ref CWUsersRequestModel
 
@@ -197,6 +198,7 @@ Resources:
         IntegrationHttpMethod: DELETE
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteCWUserFunction.Arn}/invocations"
+      RequestValidatorId: !Ref CWUsersApiValidator
       RequestModels: 
         application/json: !Ref CWUsersRequestModel
 
@@ -213,22 +215,3 @@ Resources:
       StageName: "alpha"
   
 
-
-#TODO: Get api ids and add this schema to the generated apis
-#RequestValidator:
-#  Type: AWS::ApiGateway::Model
-#  Properties:
-#    ContentType: "application/json"
-#   Name: "CWUserApiValidator"
-#    Schema:
-#      $schema: "http://json-schema.org/draft-04/schema#"
-#      title: Application Json
-#      required:
-#        - token
-#        - username
-#      type: object
-#      properties:
-#        token:
-#          type: string
-#        username:
-#          type: string
