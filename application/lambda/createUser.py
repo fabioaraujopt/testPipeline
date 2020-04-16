@@ -2,7 +2,7 @@ import json
 import botocore
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass, isUsernameInGroup~
+from utils import assume_role, genpass
 import os
 
 userPolicyName = "testPolicy" #.env
