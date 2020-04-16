@@ -15,10 +15,10 @@ def lambda_handler(event, context):
     accountId = eventBody["accountId"]
     username = eventBody["username"]
 
-    try:
-        response = deleteUserCloudWatchAccount(accountId,username)
-    except ClientError as e:
-        return errorResponse(e)
+    #try:
+    response = deleteUserCloudWatchAccount(accountId,username)
+    #except ClientError as e:
+    #return errorResponse(e)
 
     return {
         'statusCode': 200,
