@@ -33,7 +33,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     
     user = iam.User(username)
 
-    policyArn = "arn:aws:iam::{}:policy/{}".format(accountId,userPolicyName)
+    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,userPolicyName)
 
     try:
         policy = iam.Policy(policyArn).load()
