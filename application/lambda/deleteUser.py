@@ -18,10 +18,7 @@ def lambda_handler(event, context):
     try:
         response = deleteUserCloudWatchAccount(accountId,username)
     except botocore.exceptions.ClientError as e:
-        return {
-            'statusCode': 400,
-            'body': json.dumps(errorResponse(e))
-        }
+        return errorResponse(e)
 
     return {
         'statusCode': 200,
