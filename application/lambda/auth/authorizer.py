@@ -35,7 +35,7 @@ def lambda_handler(event, context):
           {
             "Action": "execute-api:Invoke",
             "Effect": "Allow",
-            "Resource": "arn:aws:execute-api:us-east-1:756050260009:*/*/*/cwusers"
+            "Resource": "arn:aws:execute-api:us-east-1:*:*/*/*/*"
           }
         ]
       }
