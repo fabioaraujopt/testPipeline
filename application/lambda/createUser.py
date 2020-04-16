@@ -16,7 +16,7 @@ def lambda_handler(event, context):
     username = eventBody["username"]
 
     try:
-        response = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+        response = createCloudWatchAccount(accountId,username)
     except botocore.exceptions.ClientError as e:
         return errorResponse(e)
 
