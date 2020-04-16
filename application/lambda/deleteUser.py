@@ -1,7 +1,9 @@
 import json
 import botocore
+from botocore.exceptions import ClientError
 from errorResponse import errorResponse
 from utils import assume_role, genpass
+
 
 userPolicyName = "testPolicy" #.env
 lambdaRoleName = "CWUsers" #.env
