@@ -38,7 +38,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     try:
         policy = iam.Policy(policyArn).load()
     except:
-        with open('../../policies/policy.json') as f:
+        with open('../../policies/CWUser.json') as f:
             repoPolicy = json.load(f)
             
         iam.create_policy(
