@@ -17,7 +17,7 @@ def lambda_handler(event, context):
 
     try:
         response = resetUserPasswordCloudWatchAccount(accountId,username)
-    except botocore.exceptions.ClientError as e:
+    except ClientError as e:
         return errorResponse(e)
 
     return {
@@ -44,7 +44,7 @@ def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
             Password=password,
             PasswordResetRequired=True
         )
-    except:
+    except ClientError as e:
         user.LoginProfile().create(
             Password=password,
             PasswordResetRequired=True

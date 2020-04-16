@@ -17,7 +17,7 @@ def lambda_handler(event, context):
 
     try:
         response = deleteUserCloudWatchAccount(accountId,username)
-    except botocore.exceptions.ClientError as e:
+    except ClientError as e:
         return errorResponse(e)
 
     return {
@@ -47,7 +47,7 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
     
     try:
         user.detach_policy(PolicyArn=policyArn)
-    except:
+    except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchEntity':
             pass
 
