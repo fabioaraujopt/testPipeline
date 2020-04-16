@@ -3,7 +3,8 @@ import botocore
 from errorResponse import errorResponse
 from utils import assume_role, genpass
 
-groupName = 'CloudWatchMonitor'
+userPolicyName = "testPolicy" #.env
+lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
@@ -12,10 +13,7 @@ def lambda_handler(event, context):
     try:
         response = resetUserPasswordCloudWatchAccount(eventBody["accountId"],eventBody["username"])
     except botocore.exceptions.ClientError as e:
-        return {
-            'statusCode': 400,
-            'body': json.dumps(errorResponse(e))
-        }
+        return errorResponse(e)
 
     return {
         'statusCode': 200,
@@ -25,29 +23,30 @@ def lambda_handler(event, context):
 
 def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
     
-    session = assume_role(str(AWSAccountId))
+    session = assume_role(AWSAccountId,lambdaRoleName)
 
-    iam = session.client('iam')
+    iam = session.resource('iam')
 
-    #if login exists delete profile
-    iam.delete_login_profile(
-        UserName=username
-    )
+    user = iam.User(username)
+
+    user.load()
     
     password = genpass(8)
-    
-    #if user do not exists call create user
-    #else continue
-    login_profile = iam.create_login_profile(
-        UserName=username,
-        Password=genpass(8),
-        PasswordResetRequired=True
-    )
 
-    response = {
+    try:
+        user.LoginProfile().load()
+        user.LoginProfile().update(
+            Password=password,
+            PasswordResetRequired=True
+        )
+    except:
+        user.LoginProfile().create(
+            Password=password,
+            PasswordResetRequired=True
+        )
+    
+    return {
         'accountId': AWSAccountId,
-        'username' : login_profile['LoginProfile']['UserName'],
+        'username' : username,
         'password': password
     }
-
-    return response

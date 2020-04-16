@@ -12,7 +12,7 @@ def errorResponse(exception):
         error_message = "Username already exists"
         statusCode = 400
     elif(errorCode == "NoSuchEntity"):
-        error_message = "Username do not exists"
+        error_message = "Username not found"
         statusCode = 404
     elif(errorCode == "EntityTemporarilyUnmodifiable"):
         error_message = "User cannot be modified"
