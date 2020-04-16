@@ -2,18 +2,23 @@ import json
 import botocore
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass, isUsernameInGroup
+from utils import assume_role, genpass, isUsernameInGroup~
+import os
 
-groupName = 'CloudWatchMonitor'
+userPolicyName = "testPolicy" #.env
+lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    #try:
-    response = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
-    #except botocore.exceptions.ClientError as e:
-    #    return errorResponse(e)
+    accountId = eventBody["accountId"]
+    username = eventBody["username"]
+
+    try:
+        response = createCloudWatchAccount(eventBody["accountId"],eventBody["username"])
+    except botocore.exceptions.ClientError as e:
+        return errorResponse(e)
 
     return {
         'statusCode': 200,
@@ -22,80 +27,51 @@ def lambda_handler(event, context):
 
 def createCloudWatchAccount(AWSAccountId,username):
 
-    session = assume_role(str(AWSAccountId))
+    session = assume_role(AWSAccountId,lambdaRoleName)
 
-    #verifiy if group and role exists
-    #good stuff https://stackoverflow.com/questions/46073435/how-can-we-fetch-iam-users-their-groups-and-policies
-
-    #list users
-    #users = client.list_users()
-
-    iamClient = session.client('iam')
     iam = session.resource('iam')
+    
+    user = iam.User(username)
+
+    policyArn = "arn:aws:iam::{}:policy/{}".format(accountId,userPolicyName)
 
     try:
-        iamGroup = iam.Group("adfdfadsf")
-        print(iamGroup)
+        policy = iam.Policy(policyArn).load()
+    except:
+        with open('../../policies/policy.json') as f:
+            repoPolicy = json.load(f)
+            
+        iam.create_policy(
+            PolicyName=userPolicyName,
+            PolicyDocument=json.dumps(repoPolicy)
+        )
+
+    try:
+        user.load()
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchEntity':
-            groupUsers = iam.Group("adfdfadsf").create()
-            #group_policy = group.create_policy(
-            #    PolicyName='string',
-            #    PolicyDocument='string'
-            #)
-           
-    iamGroup = iam.get_group(
-            GroupName=groupName
-        )
-    
-    
-    print('not existent group', groupUsers)
-
-    username = "joao"
-
-    print ('is username in group', username, isUsernameInGroup(iamGroup,username))
-
-    username = "fasdfasdfasdfa"
-
-    print ('is username in group', username, isUsernameInGroup(iamGroup,username))
-
-
-
-    return True
-
-    #simular não existir grupo 
-    #não existir 
-
-    #check if user exists
-    iam.create_user(UserName = username)
-
-    if not isUsernameInGroup(iamGroup,username):
-        iam.add_user_to_group(GroupName=groupName,UserName=username)
-
-   
-    
-    #if group exists and user not in group
-    #if group do not exists create it
-    response = iam.add_user_to_group(
-        GroupName=groupName,
-        UserName=username
-    )
+             user.create()
     
     password = genpass(8)
-    
-    #if login profile do not exists create login profile
-    login_profile = iam.create_login_profile(
-        UserName=username,
-        Password=genpass(8),
-        PasswordResetRequired=True
-    )
+
+    try:
+        user.LoginProfile().load()
+        user.LoginProfile().update(
+            Password=password,
+            PasswordResetRequired=True
+        )
+    except:
+        user.LoginProfile().create(
+            Password=password,
+            PasswordResetRequired=True
+        )
    
-    
-    response = {
+    user.attach_policy(PolicyArn=policyArn)   
+
+    return {
         'accountId': AWSAccountId,
-        'username' : login_profile['LoginProfile']['UserName'],
+        'username' : username,
         'password': password
     }
 
-    return response
 

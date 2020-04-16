@@ -1,14 +1,20 @@
 CWUsers API Idempotence
 
--POST   cwuser --> create user - if group/iam role do not exists create
-				 if not exists create user normally
-				 if exists reset password and return as created (201)
+-POST   cwuser --> create user - 
+					if iam role do not exists create
+					if create policy
+				 	if not exists create user normally
+				 	if exists reset password and return as created (201)
 
--PATCH  cwuser --> update user pw - if exists and belongs to group update pw normally			
-				  - if not exists create user and return as updated (200)
+-POST (accountId) update role_policie -> 
 
--DELETE cwuser --> delete user - if exists delete normally
- 			       - if not exists return as deleted (200)
+-PATCH  cwuser --> update user pw
+					if exists and belongs to group update pw normally			
+				    if not exists (404)
+
+-DELETE cwuser --> delete user 
+				   if exists delete normally
+ 			       if not exists return as deleted (200)
 
 
 If Entity "EntityTemporarilyUnmodifiable" -> wait(x ms) and retry request
@@ -24,6 +30,8 @@ Error template:
     StatusCode: "404",
     ErrorCode: "authorNotFound"
 }
+
+-Se Username existir no cliente mas noutro contexto?
 
 apply versioned? 
 /v1/cwusers/
