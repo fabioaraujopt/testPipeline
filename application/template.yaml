@@ -207,7 +207,7 @@ Resources:
           - accountId
         
 
-  CWUsersPUTApiGatewayMethod:
+  CWUsersPATCHApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
