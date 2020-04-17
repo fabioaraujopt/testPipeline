@@ -145,17 +145,17 @@ Resources:
       PathPart: policy
       RestApiId: !Ref CWUsersApiGatewayRestApi
 
-  CWUsersPOSTApiGatewayMethod:
+  CWUsersPUTApiGatewayMethod:
     Type: "AWS::ApiGateway::Method"
     Properties:
       ApiKeyRequired: false
-      HttpMethod: POST
+      HttpMethod: PUT
       ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: POST
+        IntegrationHttpMethod: PUT
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
@@ -211,13 +211,13 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
-      HttpMethod: PUT
+      HttpMethod: PATCH
       ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: PUT
+        IntegrationHttpMethod: PATCH
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
@@ -263,7 +263,7 @@ Resources:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
       - CWUsersPUTApiGatewayMethod
-      - CWUsersPOSTApiGatewayMethod
+      - CWUsersPATCHApiGatewayMethod
       - CWUsersDELETEApiGatewayMethod
       - CWUsersPolicyPUTApiGatewayMethod
     Properties:
