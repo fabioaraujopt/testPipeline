@@ -190,7 +190,7 @@ Resources:
           - username
           - accountId
 
-   PolicyRequestModel: 
+  PolicyRequestModel: 
     Type: AWS::ApiGateway::Model
     Properties: 
       RestApiId: !Ref CWUsersApiGatewayRestApi
