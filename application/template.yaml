@@ -64,7 +64,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: createUser.lambda_handler
+      Handler: updatePolicy.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
 
