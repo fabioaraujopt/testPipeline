@@ -38,21 +38,12 @@ def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
     
     password = genpass(8)
 
-    #create then update says user already exists
-
-    #try:
     user.LoginProfile().load()
+
     user.LoginProfile().update(
         Password=password,
         PasswordResetRequired=True
     )
-    #except ClientError as e:
-    """
-        user.LoginProfile().create(
-            Password=password,
-            PasswordResetRequired=True
-        )
-    """
     
     return {
         'accountId': AWSAccountId,

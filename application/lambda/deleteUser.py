@@ -13,6 +13,7 @@ def lambda_handler(event, context):
     eventBody = json.loads(event["body"])
 
     accountId = eventBody["accountId"]
+    
     username = eventBody["username"]
 
     try:
@@ -53,6 +54,7 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
 
     try:
         user.LoginProfile().load()
+        
         user.LoginProfile().delete()
     except:
         pass
