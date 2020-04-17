@@ -1,0 +1,34 @@
+github token
+632cddcfe670c1f8a3e61337a6bbb7e0474b9031
+
+4513 9200 8941 7894
+05/20 667
+
+920101814014
+
+
+maria as arn:aws:iam::920101814014:policy/testPolicy attached
+
+CWUsers:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    #Todo place role
+    Properties:
+      CodeUri: ./lambda
+      Handler: app.lambda_handler
+      Runtime: python3.6
+      Events:
+        CreateUser:
+          Type: Api 
+          Properties:
+            Path: /cwuser
+            Method: post
+        ResetUserPassword:
+          Type: Api 
+          Properties:
+            Path: /cwuser
+            Method: put
+        DeleteUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /cwuser
+            Method: delete
