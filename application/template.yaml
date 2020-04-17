@@ -196,7 +196,7 @@ Resources:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       ContentType: "application/json"
       Description: "CWUser Request Model"
-      Name: CWUserModel
+      Name: CWUserModelPolicy
       Schema: 
         "$schema": http://json-schema.org/draft-04/schema#
         type: object
