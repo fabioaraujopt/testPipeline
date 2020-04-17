@@ -141,7 +141,7 @@ Resources:
   CWUsersPolicyApiGatewayResource:
     Type: "AWS::ApiGateway::Resource"
     Properties:
-      ParentId: !Ref CWUsersApiGatewayResource
+      ParentId: !GetAtt CWUsersApiGatewayRestApi.RootResourceId
       PathPart: policy
       RestApiId: !Ref CWUsersApiGatewayRestApi
 
