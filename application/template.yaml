@@ -60,6 +60,22 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
+  updateCWUserPolicyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./lambda
+      Handler: createUser.lambda_handler
+      Runtime: python3.6
+      Role: !GetAtt CWUserFunctionRole.Arn
+
+  updateCWUserPolicyFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt "updateCWUserPolicyFunction.Arn"
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
+
   CWUserFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -122,6 +138,13 @@ Resources:
       PathPart: cwusers
       RestApiId: !Ref CWUsersApiGatewayRestApi
 
+  CWUsersPolicyApiGatewayResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      ParentId: !GetAtt CWUsersApiGatewayResource
+      PathPart: policy
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+
   CWUsersPOSTApiGatewayMethod:
     Type: "AWS::ApiGateway::Method"
     Properties:
@@ -166,24 +189,57 @@ Resources:
         required:
           - username
           - accountId
+
+   PolicyRequestModel: 
+    Type: AWS::ApiGateway::Model
+    Properties: 
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      ContentType: "application/json"
+      Description: "CWUser Request Model"
+      Name: CWUserModel
+      Schema: 
+        "$schema": http://json-schema.org/draft-04/schema#
+        type: object
+        properties:
+          accountId:
+            type: string
+        required:
+          - accountId
         
 
-  CWUsersPATCHApiGatewayMethod:
+  CWUsersPUTApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
-      HttpMethod: PATCH
+      HttpMethod: PUT
       ResourceId: !Ref CWUsersApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: PATCH
+        IntegrationHttpMethod: PUT
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
       RequestModels: 
         application/json: !Ref CWUsersRequestModel
+  
+  CWUsersPolicyPUTApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      HttpMethod: PUT
+      ResourceId: !Ref CWUsersPolicyApiGatewayResource
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
+      Integration:
+        IntegrationHttpMethod: PUT
+        Type: AWS_PROXY
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
+      RequestValidatorId: !Ref CWUsersApiValidator
+      RequestModels: 
+        application/json: !Ref PolicyRequestModel
 
   CWUsersDELETEApiGatewayMethod:
     Type: "AWS::ApiGateway::Method"
@@ -206,9 +262,10 @@ Resources:
   CwUsersApiGatewayBetaStageDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
-      - CWUsersPATCHApiGatewayMethod
+      - CWUsersPUTApiGatewayMethod
       - CWUsersPOSTApiGatewayMethod
       - CWUsersDELETEApiGatewayMethod
+      - CWUsersPolicyPUTApiGatewayMethod
     Properties:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Description: "Deploy api gateway rest api"
