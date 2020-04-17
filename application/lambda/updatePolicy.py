@@ -34,7 +34,7 @@ def updateCloudWatchPolicy(AWSAccountId):
 
     with open('./policies/CWUser.json') as f:
             repoPolicy = json.load(f)
-
+    #se policy está igual não atualiza....
     try:
         policy = iam.Policy(policyArn).load()
         policy.create_version(
