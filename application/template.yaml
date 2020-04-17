@@ -155,7 +155,7 @@ Resources:
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: PUT
+        IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${createCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
@@ -217,7 +217,7 @@ Resources:
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: PATCH
+        IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
@@ -234,7 +234,7 @@ Resources:
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: PUT
+        IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
@@ -251,7 +251,7 @@ Resources:
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
       Integration:
-        IntegrationHttpMethod: DELETE
+        IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${deleteCWUserFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
