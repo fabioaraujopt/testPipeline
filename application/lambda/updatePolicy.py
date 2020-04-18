@@ -25,31 +25,43 @@ def lambda_handler(event, context):
     }
 
 def updateCloudWatchPolicy(AWSAccountId):
-
+    
     session = assume_role(AWSAccountId,lambdaRoleName)
 
-    iam = session.resource('iam')
+    iam = session.client('iam')
     
     policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,userPolicyName)
 
     with open('./policies/CWUser.json') as f:
             repoPolicy = json.load(f)
-    #se policy está igual não atualiza....aw
+    
     try:
-        policy = iam.Policy(policyArn).load()
-        policy.create_version(
-            PolicyDocument=repoPolicy,
-            SetAsDefault=True
+        policy = iam.get_policy(
+            PolicyArn=policyArn
         )
     except ClientError as e:
-        if e.response['Error']['Code'] == 'NoSuchEntity':  
-            iam.create_policy(
+         if e.response['Error']['Code'] == 'NoSuchEntity':  
+            policy = iam.create_policy(
                 PolicyName=userPolicyName,
-                PolicyDocument=json.dumps(repoPolicy)
+                PolicyDocument=json.dumps(repoPolicy),
             )
-
+        
+    policyDefaultVersion = iam.get_policy_version(
+        PolicyArn=policyArn,
+        VersionId=policy["Policy"]["DefaultVersionId"]
+    )
+    
+    policyDocument = policyDefaultVersion["PolicyVersion"]["Document"]
+    
+    if(policyDocument != repoPolicy):
+        response = iam.create_policy_version(
+            PolicyArn=policyArn,
+            PolicyDocument=json.dumps(repoPolicy),
+            SetAsDefault=True
+        )
+    
     return {
         'accountId': AWSAccountId,
         'policy_arn': policyArn
     }
-
+    
