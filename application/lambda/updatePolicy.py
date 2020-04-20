@@ -14,8 +14,6 @@ lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
-    event = json.loads(event)
-
     accountId = event['pathParameters']['account-id']
 
     try:

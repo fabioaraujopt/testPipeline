@@ -14,10 +14,11 @@ lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
-    event = json.loads(event)
-
     accountId = event['pathParameters']['account-id']
-    username = event["body"]["username"]
+
+    eventBody = json.loads(event["body"])
+
+    username = eventBody["username"]
 
     try:
         response = resetUserPasswordCloudWatchAccount(accountId,username)
