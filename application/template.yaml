@@ -297,6 +297,6 @@ Resources:
     Properties:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Description: "Deploy api gateway rest api"
-      StageName: "v1"
+      StageName: "alpha"
   
 
