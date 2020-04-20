@@ -236,7 +236,7 @@ Resources:
       Integration:
         IntegrationHttpMethod: POST
         Type: AWS_PROXY
-        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resetPasswordCWUserFunction.Arn}/invocations"
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${updateCWUserPolicyFunction.Arn}/invocations"
       RequestValidatorId: !Ref CWUsersApiValidator
       RequestModels: 
         application/json: !Ref PolicyRequestModel
