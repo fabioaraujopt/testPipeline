@@ -1,9 +1,13 @@
 import json
 import botocore
+import logging
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
 from utils import assume_role, genpass
 
+logger = logging.getLogger(name=__name__)
+log_level = logging.INFO
+logger.setLevel(log_level)
 
 userPolicyName = "testPolicy" #.env
 lambdaRoleName = "CWUsers" #.env
@@ -19,6 +23,7 @@ def lambda_handler(event, context):
     try:
         response = createCloudWatchAccount(accountId,username)
     except ClientError as e:
+        logger.exception(e)
         return errorResponse(e)
 
     return {
@@ -38,7 +43,9 @@ def createCloudWatchAccount(AWSAccountId,username):
 
     try:
         policy = iam.Policy(policyArn).load()
-    except:
+    except ClientError as e:
+        logger.exception(e)
+
         with open('./policies/CWUser.json') as f:
             repoPolicy = json.load(f)
             
@@ -50,6 +57,8 @@ def createCloudWatchAccount(AWSAccountId,username):
     try:
         user.load()
     except ClientError as e:
+        logger.exception(e)
+
         if e.response['Error']['Code'] == 'NoSuchEntity':
              user.create()
     
@@ -62,7 +71,9 @@ def createCloudWatchAccount(AWSAccountId,username):
             Password=password,
             PasswordResetRequired=True
         )
-    except:
+    except ClientError as e:
+        logger.exception(e)
+
         user.LoginProfile().create(
             Password=password,
             PasswordResetRequired=True

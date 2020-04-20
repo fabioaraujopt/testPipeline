@@ -1,9 +1,13 @@
 import json
 import botocore
+import logging
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
 from utils import assume_role, genpass
 
+logger = logging.getLogger(name=__name__)
+log_level = logging.INFO
+logger.setLevel(log_level)
 
 userPolicyName = "testPolicy" #.env
 lambdaRoleName = "CWUsers" #.env
@@ -18,6 +22,7 @@ def lambda_handler(event, context):
     try:
         response = resetUserPasswordCloudWatchAccount(accountId,username)
     except ClientError as e:
+        logger.exception(e)
         return errorResponse(e)
 
     return {

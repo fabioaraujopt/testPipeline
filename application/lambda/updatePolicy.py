@@ -1,9 +1,13 @@
 import json
 import botocore
+import logging
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
 from utils import assume_role, genpass
 
+logger = logging.getLogger(name=__name__)
+log_level = logging.INFO
+logger.setLevel(log_level)
 
 userPolicyName = "testPolicy" #.env
 lambdaRoleName = "CWUsers" #.env
@@ -17,6 +21,8 @@ def lambda_handler(event, context):
     try:
         response = updateCloudWatchPolicy(accountId)
     except ClientError as e:
+        logger.exception(e)
+
         return errorResponse(e)
 
     return {
@@ -40,7 +46,9 @@ def updateCloudWatchPolicy(AWSAccountId):
             PolicyArn=policyArn
         )
     except ClientError as e:
-         if e.response['Error']['Code'] == 'NoSuchEntity':  
+        logger.exception(e)
+
+        if e.response['Error']['Code'] == 'NoSuchEntity':  
             policy = iam.create_policy(
                 PolicyName=userPolicyName,
                 PolicyDocument=json.dumps(repoPolicy),
