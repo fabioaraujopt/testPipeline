@@ -131,26 +131,54 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
-  CWUsersApiGatewayResource:
+  CloudWatchApiGatewayResource:
     Type: "AWS::ApiGateway::Resource"
     Properties:
       ParentId: !GetAtt CWUsersApiGatewayRestApi.RootResourceId
-      PathPart: cwusers
+      PathPart: cloudwatch
       RestApiId: !Ref CWUsersApiGatewayRestApi
 
-  CWUsersPolicyApiGatewayResource:
+  AccountApiGatewayResource:
     Type: "AWS::ApiGateway::Resource"
     Properties:
-      ParentId: !GetAtt CWUsersApiGatewayRestApi.RootResourceId
-      PathPart: policy
+      ParentId: !Ref CloudWatchApiGatewayResource
+      PathPart: account
       RestApiId: !Ref CWUsersApiGatewayRestApi
+  
+  AccountIdApiGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !Ref AccountApiGatewayResource
+      PathPart: "{account-id}"
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+  
+  UserApiGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !Ref AccountIdApiGatewayResource
+      PathPart: user
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+
+  PasswordApiGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !Ref UserApiGatewayResource
+      PathPart: password
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+
+  PolicyApiGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !Ref AccountIdApiGatewayResource
+      PathPart: policy
+      RestApiId: !Ref CWUsersApiGatewayRestApi 
 
   CWUsersPUTApiGatewayMethod:
     Type: "AWS::ApiGateway::Method"
     Properties:
       ApiKeyRequired: false
       HttpMethod: PUT
-      ResourceId: !Ref CWUsersApiGatewayResource
+      ResourceId: !Ref UserApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -212,7 +240,7 @@ Resources:
     Properties:
       ApiKeyRequired: false
       HttpMethod: PATCH
-      ResourceId: !Ref CWUsersApiGatewayResource
+      ResourceId: !Ref PasswordApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -229,7 +257,7 @@ Resources:
     Properties:
       ApiKeyRequired: false
       HttpMethod: PUT
-      ResourceId: !Ref CWUsersPolicyApiGatewayResource
+      ResourceId: !Ref PolicyApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -246,7 +274,7 @@ Resources:
     Properties:
       ApiKeyRequired: false
       HttpMethod: DELETE
-      ResourceId: !Ref CWUsersApiGatewayResource
+      ResourceId: !Ref UserApiGatewayResource
       RestApiId: !Ref CWUsersApiGatewayRestApi
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
@@ -269,6 +297,6 @@ Resources:
     Properties:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Description: "Deploy api gateway rest api"
-      StageName: "alpha"
+      StageName: "v1"
   
 
