@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    accountId = eventBody["accountId"]
+    accountId = eventBody['pathParameters']['account-id']
     
     username = eventBody["username"]
 
@@ -62,7 +62,6 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
     user.delete()
 
     return {
-        'accountId': AWSAccountId,
         'username' : username,
         }
     

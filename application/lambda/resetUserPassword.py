@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    accountId = eventBody["accountId"]
+    accountId = eventBody['pathParameters']['account-id']
     username = eventBody["username"]
 
     try:

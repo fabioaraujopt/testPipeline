@@ -216,24 +216,6 @@ Resources:
             type: string
         required:
           - username
-          - accountId
-
-  PolicyRequestModel: 
-    Type: AWS::ApiGateway::Model
-    Properties: 
-      RestApiId: !Ref CWUsersApiGatewayRestApi
-      ContentType: "application/json"
-      Description: "CWUser Request Model"
-      Name: CWUserModelPolicy
-      Schema: 
-        "$schema": http://json-schema.org/draft-04/schema#
-        type: object
-        properties:
-          accountId:
-            type: string
-        required:
-          - accountId
-        
 
   CWUsersPATCHApiGatewayMethod:
     Type: AWS::ApiGateway::Method
@@ -265,9 +247,7 @@ Resources:
         IntegrationHttpMethod: POST
         Type: AWS_PROXY
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${updateCWUserPolicyFunction.Arn}/invocations"
-      RequestValidatorId: !Ref CWUsersApiValidator
-      RequestModels: 
-        application/json: !Ref PolicyRequestModel
+    
 
   CWUsersDELETEApiGatewayMethod:
     Type: "AWS::ApiGateway::Method"

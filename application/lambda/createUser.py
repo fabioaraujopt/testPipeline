@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    accountId = eventBody["accountId"]
+    accountId = eventBody['pathParameters']['account-id']
 
     username = eventBody["username"]
 
@@ -71,7 +71,6 @@ def createCloudWatchAccount(AWSAccountId,username):
     user.attach_policy(PolicyArn=policyArn)   
 
     return {
-        'accountId': AWSAccountId,
         'username' : username,
         'password': password
     }

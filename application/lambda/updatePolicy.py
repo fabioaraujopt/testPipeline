@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
     eventBody = json.loads(event["body"])
 
-    accountId = eventBody["accountId"]
+    accountId = eventBody['pathParameters']['account-id']
 
     try:
         response = updateCloudWatchPolicy(accountId)
@@ -61,7 +61,6 @@ def updateCloudWatchPolicy(AWSAccountId):
         )
     
     return {
-        'accountId': AWSAccountId,
         'policy_arn': policyArn
     }
     
