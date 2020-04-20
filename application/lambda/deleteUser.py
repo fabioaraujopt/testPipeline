@@ -14,11 +14,11 @@ lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
-    eventBody = json.loads(event["body"])
+    event = json.loads(event)
 
-    accountId = eventBody['pathParameters']['account-id']
+    accountId = event['pathParameters']['account-id']
     
-    username = eventBody["username"]
+    username = event["body"]["username"]
 
     try:
         response = deleteUserCloudWatchAccount(accountId,username)

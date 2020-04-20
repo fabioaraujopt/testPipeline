@@ -14,9 +14,9 @@ lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
-    eventBody = json.loads(event["body"])
+    event = json.loads(event)
 
-    accountId = eventBody['pathParameters']['account-id']
+    accountId = event['pathParameters']['account-id']
 
     try:
         response = updateCloudWatchPolicy(accountId)
