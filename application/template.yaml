@@ -123,7 +123,7 @@ Resources:
                 Action:
                   - "sts:AssumeRole"
                 Resource:
-                  - "arn:aws:iam::*:role/CWUsers"
+                  - "arn:aws:iam::*:role/${FunctionRole}"
 
   CWUsersApiGatewayRestApi:
     Type: "AWS::ApiGateway::RestApi"

@@ -4,7 +4,7 @@
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::756050260009:role/testpipeline-application-CWUserFunctionRole-3WK0JVVY6X9"
+        "AWS": "arn:aws:iam::756050260009:root"
       },
       "Action": "sts:AssumeRole",
       "Condition": {}
