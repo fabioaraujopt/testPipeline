@@ -44,7 +44,7 @@ def createCloudWatchAccount(AWSAccountId,username):
     except ClientError as e:
         logger.exception(e)
 
-        with open('./policies/CWUser.json') as f:
+        with open('./policies/CloudWatchUserPolicy.json') as f:
             repoPolicy = json.load(f)
             
         iam.create_policy(

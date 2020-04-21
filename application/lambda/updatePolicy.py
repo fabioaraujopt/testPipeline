@@ -35,7 +35,7 @@ def updateCloudWatchPolicy(AWSAccountId):
     
     policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,os.environ['USER_POLICY'])
 
-    with open('./policies/CWUser.json') as f:
+    with open('./policies/CloudWatchUserPolicy.json') as f:
             repoPolicy = json.load(f)
     
     try:
