@@ -1,7 +1,7 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: 'testpipeline'
+Description: 'CloudWatchUsersPipeline'
 
 Metadata:
     AWS::CloudFormation::Interface:
@@ -20,11 +20,11 @@ Parameters:
     ProjectName:
         Type: String
         Description: 'Project and Stack name'
-        Default: 'testpipeline'
+        Default: 'CloudWatchUsers'
     ParentStackName:
         Description: 'Parent Stack Name'
         Type: String
-        Default: testpipeline
+        Default: CloudWatchUsers
     GithubToken:
         Type: String
         Description: 'Github OAuth Token with full permissions on admin:repo_hook and repo'
@@ -35,10 +35,10 @@ Parameters:
         Default: 'OutSystems'
     GithubRepo:
         Type: String
-        Description: 'Gitub repository name'
+        Description: 'os-cloud-cwusers'
     GithubBranch:
         Type: String
-        Description: 'Gitub repository branch'
+        Description: 'master'
 
 Resources:
 

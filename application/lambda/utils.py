@@ -6,6 +6,7 @@ import random
 
 
 def assume_role(account_id,role_to_assume):
+    
     sts = boto3.client("sts")
     
     role_arn = "arn:aws:iam::{}:role/{}".format(account_id,role_to_assume)
@@ -14,7 +15,7 @@ def assume_role(account_id,role_to_assume):
         resp = sts.assume_role(
             RoleArn=role_arn,
             RoleSessionName="CloudWatchService")
-        print (resp)
+        
     except botocore.exceptions.ClientError as e:
         raise e
 
@@ -24,10 +25,12 @@ def assume_role(account_id,role_to_assume):
                         account_id)
 
     creds = resp["Credentials"]
+    
     session = boto3.Session(
         aws_access_key_id=creds["AccessKeyId"],
         aws_secret_access_key=creds["SecretAccessKey"],
         aws_session_token=creds["SessionToken"])
+    
     return session
 
 def isUsernameInGroup(iamGroup, username):

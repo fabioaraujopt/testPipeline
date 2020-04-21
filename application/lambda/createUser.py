@@ -1,6 +1,7 @@
 import json
 import botocore
 import logging
+import os
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
 from utils import assume_role, genpass
@@ -8,9 +9,6 @@ from utils import assume_role, genpass
 logger = logging.getLogger(name=__name__)
 log_level = logging.INFO
 logger.setLevel(log_level)
-
-userPolicyName = "testPolicy" #.env
-lambdaRoleName = "CWUsers" #.env
 
 def lambda_handler(event, context):
 
@@ -33,13 +31,13 @@ def lambda_handler(event, context):
 
 def createCloudWatchAccount(AWSAccountId,username):
 
-    session = assume_role(AWSAccountId,lambdaRoleName)
+    session = assume_role(AWSAccountId,os.environ['FUNCTION_POLICY'])
 
     iam = session.resource('iam')
     
     user = iam.User(username)
 
-    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,userPolicyName)
+    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,os.environ['USER_POLICY'])
 
     try:
         policy = iam.Policy(policyArn).load()
@@ -50,7 +48,7 @@ def createCloudWatchAccount(AWSAccountId,username):
             repoPolicy = json.load(f)
             
         iam.create_policy(
-            PolicyName=userPolicyName,
+            PolicyName=os.environ['USER_POLICY'],
             PolicyDocument=json.dumps(repoPolicy)
         )
 

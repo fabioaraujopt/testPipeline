@@ -11,6 +11,16 @@ Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  UserPolicy:
+    Description: Policy that regulates the cloudwatch user access to resources.
+    Type: string
+    Default: CloudWatchUserPolicy
+  FunctionRole:
+    Description: Policy that lives in foreign accounts and regulates activity of lambda functions that crud cloudwatch users.
+    Type: string
+    Default: CloudWatchUserFunctionRole
+
 Resources:
   createCWUserFunction:
     Type: AWS::Serverless::Function
@@ -19,6 +29,10 @@ Resources:
       Handler: createUser.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
+      Environment:
+        Variables:
+          USER_POLICY: !Ref UserPolicy
+          FUNCTION_POLICY: !Ref FunctionRole
 
   createCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -35,6 +49,10 @@ Resources:
       Handler: resetUserPassword.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
+      Environment:
+          Variables:
+            USER_POLICY: !Ref UserPolicy
+            FUNCTION_POLICY: !Ref FunctionRole
 
   resetPasswordCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -51,6 +69,10 @@ Resources:
       Handler: deleteUser.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
+      Environment:
+        Variables:
+          USER_POLICY: !Ref UserPolicy
+          FUNCTION_POLICY: !Ref FunctionRole
 
   deleteCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -67,6 +89,10 @@ Resources:
       Handler: updatePolicy.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
+      Environment:
+        Variables:
+          USER_POLICY: !Ref UserPolicy
+          FUNCTION_POLICY: !Ref FunctionRole
 
   updateCWUserPolicyFunctionPermission:
     Type: AWS::Lambda::Permission
