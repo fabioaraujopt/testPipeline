@@ -14,11 +14,11 @@ Globals:
 Parameters:
   UserPolicy:
     Description: Policy that regulates the cloudwatch user access to resources.
-    Type: string
+    Type: String
     Default: CloudWatchUserPolicy
   FunctionRole:
     Description: Policy that lives in foreign accounts and regulates activity of lambda functions that crud cloudwatch users.
-    Type: string
+    Type: String
     Default: CloudWatchUserFunctionRole
 
 Resources:
