@@ -4,10 +4,6 @@ import uuid
 import boto3
 import auth
 
-#from operations.rdsops_operations import *
-
-
-# necessary capabilities to perform an api operation (POST and GET methods)
 API_OPERATIONS = {
     "CreateCloudWatchUser" : "eb07c9a0-609a-497e-961c-26717c897324",
     "DeleteCloudWatchUser" : "b96dffc0-ab86-4679-b989-110742d9d462",
