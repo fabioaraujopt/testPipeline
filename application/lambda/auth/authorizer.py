@@ -60,8 +60,8 @@ def lambda_handler(event, context):
     policy.region = tmp[3]
     policy.stage = api_gateway_arn_tmp[1]
 
-    try:
-        print(RESOURCES_GUID[resource][method])
+    
+    print(RESOURCES_GUID[resource][method])
 
     return True
 
