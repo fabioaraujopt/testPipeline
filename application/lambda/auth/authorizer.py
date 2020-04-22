@@ -25,7 +25,7 @@ RESOURCES_GUID = {
     }
 }
 
-publicKey = "PFJTQUtleVZhbHVlPjxNb2R1bHVzPmhVRWxmNytBRE1nUHEvcmV0NDArZ1lQaVZWZjhDQzdjc0NVZzRMMGpaeC9xeFU3WEJHN1plUEpWZ3c2TzJZdXFFcFFocTh5a0Q4Y0tmbVExNnVmaDVDcDk0VmhReFl6bGdTY2p3aUdkbFUvUzh0WDROY1ZmOGZJb1hHRDdkV0tQalV6V3RtUC9MM0h3alpXU1J4L3hDUzRsWjFvZThRRnEzQjZxMVJ0czdneTZIaDhKZXlNYXlrNVp1RlpZcVBGWmIxU21PZkJXRFkvZWkxK1duUVFrb1MyYjNwVGhxakdUTk5oWGFMdGZtV05xK1dnMEpZWVdkVTd6NE94dUlCbjJvL3NWQUVRT0piSEZzb2FUckFoajI1NmhBb0J6WjlKWlJUSmhIelcweEJXYWRLVEVMcDd3R3dPK0xiMWR1KzJXOGpxdWJVSWZyUFByWkJncnFST0tZUT09PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg=="
+public_key = "PFJTQUtleVZhbHVlPjxNb2R1bHVzPmhVRWxmNytBRE1nUHEvcmV0NDArZ1lQaVZWZjhDQzdjc0NVZzRMMGpaeC9xeFU3WEJHN1plUEpWZ3c2TzJZdXFFcFFocTh5a0Q4Y0tmbVExNnVmaDVDcDk0VmhReFl6bGdTY2p3aUdkbFUvUzh0WDROY1ZmOGZJb1hHRDdkV0tQalV6V3RtUC9MM0h3alpXU1J4L3hDUzRsWjFvZThRRnEzQjZxMVJ0czdneTZIaDhKZXlNYXlrNVp1RlpZcVBGWmIxU21PZkJXRFkvZWkxK1duUVFrb1MyYjNwVGhxakdUTk5oWGFMdGZtV05xK1dnMEpZWVdkVTd6NE94dUlCbjJvL3NWQUVRT0piSEZzb2FUckFoajI1NmhBb0J6WjlKWlJUSmhIelcweEJXYWRLVEVMcDd3R3dPK0xiMWR1KzJXOGpxdWJVSWZyUFByWkJncnFST0tZUT09PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg=="
 
 
 logger = logging.getLogger(name=__name__)
@@ -60,9 +60,11 @@ def lambda_handler(event, context):
     policy.region = tmp[3]
     policy.stage = api_gateway_arn_tmp[1]
 
-    
-    print(RESOURCES_GUID[resource][method])
+    #check if guid empty
+    guid = RESOURCES_GUID[resource][method]
 
+    auth.validate_token(client_token, public_key, guid)
+    
     return True
 
 
