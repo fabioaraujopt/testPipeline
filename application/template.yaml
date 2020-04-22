@@ -130,7 +130,6 @@ Resources:
     Properties:
       Name: "CWUsersApi"
 
-  # API Authorizer
   CWUsersApiGatewayAuthorizer:
     Type: AWS::ApiGateway::Authorizer
     Properties:
@@ -139,6 +138,8 @@ Resources:
       IdentitySource: method.request.header.Authorization
       Name: cwusers-authorizer
       RestApiId: !Ref CWUsersApiGatewayRestApi
+      #Layers: 
+      #  - !Ref AuthLayer
       Type: TOKEN
 
   APIAuthorizerFunction:
