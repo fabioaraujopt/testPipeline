@@ -13,6 +13,8 @@ logger.setLevel(log_level)
 
 def lambda_handler(event, context):
 
+    logger.info(event)
+
     accountId = event['pathParameters']['account-id']
 
     try:
