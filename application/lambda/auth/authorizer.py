@@ -35,7 +35,7 @@ def lambda_handler(event, context):
 
     method = api_gateway_arn_tmp[2]
 
-    resourceAfterAccountId = re.search('\d\/.+$', method_arn)
+    resourceAfterAccountId = re.search('(?<=\d\/).*$', method_arn)
 
     aws_account_id = tmp[4]
 
