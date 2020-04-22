@@ -46,7 +46,8 @@ def lambda_handler(event, context):
     policy.region = tmp[3]
     policy.stage = api_gateway_arn_tmp[1]
 
-    print(resourceAfterAccountId)
+    if resourceAfterAccountId:
+        print (resourceAfterAccountId.group(0))
 
     return True
 
