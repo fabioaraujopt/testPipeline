@@ -20,12 +20,16 @@ API_OPERATION_DELETE_CAPABILITIES = {
     "cwusers": ["a6506df1-dd59-4506-bbc0-2913b542f12b"]
 }
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(name=__name__)
+log_level = logging.INFO
+logger.setLevel(log_level)
 
 ssm_client = boto3.client('ssm')
 
 
 def lambda_handler(event, context):
+    
+    logger.info(event)
 
     return {
       "principalId": "user",
