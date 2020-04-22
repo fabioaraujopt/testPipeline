@@ -11,6 +11,8 @@ API_OPERATIONS = {
     "UpdatePolicyCloudWatch" : "0500881c-de42-447d-847c-733504136c9d"
 }
 
+publicKey = "PFJTQUtleVZhbHVlPjxNb2R1bHVzPmhVRWxmNytBRE1nUHEvcmV0NDArZ1lQaVZWZjhDQzdjc0NVZzRMMGpaeC9xeFU3WEJHN1plUEpWZ3c2TzJZdXFFcFFocTh5a0Q4Y0tmbVExNnVmaDVDcDk0VmhReFl6bGdTY2p3aUdkbFUvUzh0WDROY1ZmOGZJb1hHRDdkV0tQalV6V3RtUC9MM0h3alpXU1J4L3hDUzRsWjFvZThRRnEzQjZxMVJ0czdneTZIaDhKZXlNYXlrNVp1RlpZcVBGWmIxU21PZkJXRFkvZWkxK1duUVFrb1MyYjNwVGhxakdUTk5oWGFMdGZtV05xK1dnMEpZWVdkVTd6NE94dUlCbjJvL3NWQUVRT0piSEZzb2FUckFoajI1NmhBb0J6WjlKWlJUSmhIelcweEJXYWRLVEVMcDd3R3dPK0xiMWR1KzJXOGpxdWJVSWZyUFByWkJncnFST0tZUT09PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg=="
+
 
 logger = logging.getLogger(name=__name__)
 log_level = logging.INFO
@@ -22,6 +24,47 @@ ssm_client = boto3.client('ssm')
 def lambda_handler(event, context):
     
     logger.info(event)
+    
+    client_token = event['authorizationToken']
+
+    method_arn = event['methodArn']
+
+    tmp = method_arn.split(':')
+
+    api_gateway_arn_tmp = tmp[5].split('/')
+
+    method = api_gateway_arn_tmp[2]
+
+    resource = api_gateway_arn_tmp[3]
+
+    aws_account_id = tmp[4]
+
+    principal_id = str(uuid.uuid4())
+
+    policy = AuthPolicy(principal_id, aws_account_id)
+    policy.rest_api_id = api_gateway_arn_tmp[0]
+    policy.region = tmp[3]
+    policy.stage = api_gateway_arn_tmp[1]
+
+    print(resource)
+
+    return True
+
+
+    if method == HttpVerb.PUT:
+        required_capabilites = API_OPERATION_POST_CAPABILITIES[resource]
+        child_resource = ''
+    elif method == HttpVerb.POST:
+        required_capabilites = API_OPERATION_GET_CAPABILITIES[resource]
+        child_resource = ''.join(["/", api_gateway_arn_tmp[4]])
+    else:
+        raise NameError(f"Invalid method name: {method}")
+
+
+
+
+
+
 
     return {
       "principalId": "user",
@@ -52,16 +95,16 @@ def lambda_handler(event, context):
     '''
 
     # the public key must be available as a parameter
+    """
     resp = ssm_client.get_parameter(
         Name="auth-server-pub-key",
     )
+    
     if resp["Parameter"]["Value"]:
         public_key = resp["Parameter"]["Value"]
     else:
         raise NameError("Public Key was not found within ssm response.")
-
-    client_token = event['authorizationToken']
-    method_arn = event['methodArn']
+    """
 
     tmp = method_arn.split(':')
     api_gateway_arn_tmp = tmp[5].split('/')
