@@ -46,8 +46,7 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
 
         if e.response['Error']['Code'] == 'NoSuchEntity':
             return {
-                'accountId': AWSAccountId,
-                'username' : username,
+                'username' : username
             }
     
     try:
@@ -68,7 +67,7 @@ def deleteUserCloudWatchAccount(AWSAccountId,username):
     user.delete()
 
     return {
-        'username' : username,
+        'username' : username
         }
     
     
