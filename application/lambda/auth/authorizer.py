@@ -11,6 +11,20 @@ API_OPERATIONS = {
     "UpdatePolicyCloudWatch" : "0500881c-de42-447d-847c-733504136c9d"
 }
 
+
+RESOURCES_GUID = {
+    "user" : {
+        "DELETE": "b96dffc0-ab86-4679-b989-110742d9d462",
+        "PUT": "eb07c9a0-609a-497e-961c-26717c897324"
+    },
+    "user/password" : { 
+        "PATCH": "4bddf46b-e472-45f1-b514-70c8c1005406"
+    },
+    "policy":{
+        "PUT": "0500881c-de42-447d-847c-733504136c9d"
+    }
+}
+
 publicKey = "PFJTQUtleVZhbHVlPjxNb2R1bHVzPmhVRWxmNytBRE1nUHEvcmV0NDArZ1lQaVZWZjhDQzdjc0NVZzRMMGpaeC9xeFU3WEJHN1plUEpWZ3c2TzJZdXFFcFFocTh5a0Q4Y0tmbVExNnVmaDVDcDk0VmhReFl6bGdTY2p3aUdkbFUvUzh0WDROY1ZmOGZJb1hHRDdkV0tQalV6V3RtUC9MM0h3alpXU1J4L3hDUzRsWjFvZThRRnEzQjZxMVJ0czdneTZIaDhKZXlNYXlrNVp1RlpZcVBGWmIxU21PZkJXRFkvZWkxK1duUVFrb1MyYjNwVGhxakdUTk5oWGFMdGZtV05xK1dnMEpZWVdkVTd6NE94dUlCbjJvL3NWQUVRT0piSEZzb2FUckFoajI1NmhBb0J6WjlKWlJUSmhIelcweEJXYWRLVEVMcDd3R3dPK0xiMWR1KzJXOGpxdWJVSWZyUFByWkJncnFST0tZUT09PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg=="
 
 
@@ -35,7 +49,7 @@ def lambda_handler(event, context):
 
     method = api_gateway_arn_tmp[2]
 
-    resourceAfterAccountId = re.search('(?<=\d\/).*$', method_arn)
+    resource = re.search('(?<=\d\/).*$', method_arn).group(0)
 
     aws_account_id = tmp[4]
 
@@ -46,8 +60,8 @@ def lambda_handler(event, context):
     policy.region = tmp[3]
     policy.stage = api_gateway_arn_tmp[1]
 
-    if resourceAfterAccountId:
-        print (resourceAfterAccountId.group(0))
+    try:
+        print(RESOURCES_GUID[resource][method])
 
     return True
 
