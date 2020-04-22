@@ -9,7 +9,7 @@ phases:
         commands:
           - cd $CODEBUILD_SRC_DIR
           - echo "Starting build `date` in `pwd`"
-          - wget -o https://files.pythonhosted.org/packages/6d/f1/c69d53593eb92a5e5382fa2101cd9ae861936c6a428092605b4257336171/cryptography-2.9.1-cp35-abi3-manylinux2010_x86_64.whl ./lambda/auth/cryptography-2.9.1-cp35-abi3-manylinux2010_x86_64.whl
+          - wget -o https://files.pythonhosted.org/packages/6d/f1/c69d53593eb92a5e5382fa2101cd9ae861936c6a428092605b4257336171/cryptography-2.9.1-cp35-abi3-manylinux2010_x86_64.whl ./application/lambda/auth/cryptography-2.9.1-cp35-abi3-manylinux2010_x86_64.whl
           - unzip application/lambda/auth/cryptography-2.9.1-cp35-abi3-manylinux2010_x86_64.whl -d application/lambda/auth/
           - python application/lambda/auth/setup.py install -t application/lambda/auth/
           - pip install -r application/lambda/auth/requirements.pip -t application/lambda/auth/
