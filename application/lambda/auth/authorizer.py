@@ -2,7 +2,7 @@ import logging
 import re
 import uuid
 import boto3
-import auth
+#import auth
 
 API_OPERATIONS = {
     "CreateCloudWatchUser" : "eb07c9a0-609a-497e-961c-26717c897324",
@@ -38,6 +38,22 @@ ssm_client = boto3.client('ssm')
 def lambda_handler(event, context):
     
     logger.info(event)
+
+
+    return {
+      "principalId": "user",
+      "policyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Action": "execute-api:Invoke",
+            "Effect": "Allow",
+            "Resource": "arn:aws:execute-api:us-east-1:*:*/*/*/*"
+          }
+        ]
+      }
+    }
+
     
     client_token = event['authorizationToken']
 
@@ -76,26 +92,6 @@ def lambda_handler(event, context):
         child_resource = ''.join(["/", api_gateway_arn_tmp[4]])
     else:
         raise NameError(f"Invalid method name: {method}")
-
-
-
-
-
-
-
-    return {
-      "principalId": "user",
-      "policyDocument": {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Action": "execute-api:Invoke",
-            "Effect": "Allow",
-            "Resource": "arn:aws:execute-api:us-east-1:*:*/*/*/*"
-          }
-        ]
-      }
-    }
 
     '''
     Typically the event has 3 keys:
