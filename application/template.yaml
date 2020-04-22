@@ -305,12 +305,11 @@ Resources:
       Description: "Deploy api gateway rest api"
       StageName: "alpha"
       MethodSettings:
-        MethodSettings:
-          - DataTraceEnabled: true
-            HttpMethod: "*"
-            LoggingLevel: INFO
-            ResourcePath: "/*"
-            MetricsEnabled: true
+        - DataTraceEnabled: true
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          ResourcePath: "/*"
+          MetricsEnabled: true
   
 
   ApiGwAccountConfig:
