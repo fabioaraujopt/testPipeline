@@ -2,23 +2,19 @@ import logging
 import re
 import uuid
 import boto3
-#import auth
+import auth
 
 #from operations.rdsops_operations import *
 
 
 # necessary capabilities to perform an api operation (POST and GET methods)
-API_OPERATION_POST_CAPABILITIES = {
-    "cwusers": ["45f6a84e-2481-11e9-ab14-d663bd873d93"]
+API_OPERATIONS = {
+    "CreateCloudWatchUser" : "eb07c9a0-609a-497e-961c-26717c897324",
+    "DeleteCloudWatchUser" : "b96dffc0-ab86-4679-b989-110742d9d462",
+    "ResetPasswordCloudWatchUser" : "4bddf46b-e472-45f1-b514-70c8c1005406",
+    "UpdatePolicyCloudWatch" : "0500881c-de42-447d-847c-733504136c9d"
 }
 
-API_OPERATION_PUT_CAPABILITIES = {
-    "cwusers": ["a6506df1-dd59-4506-bbc0-2913b542f12b"]
-}
-
-API_OPERATION_DELETE_CAPABILITIES = {
-    "cwusers": ["a6506df1-dd59-4506-bbc0-2913b542f12b"]
-}
 
 logger = logging.getLogger(name=__name__)
 log_level = logging.INFO
