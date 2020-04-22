@@ -8,8 +8,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 
-import rds_exceptions
-
 def pad_base64(unpadded_base64, is_bytes=False):
     '''
     In base64, the length of the encoded data must be multiple of 4
