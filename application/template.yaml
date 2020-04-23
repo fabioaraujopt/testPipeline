@@ -21,6 +21,10 @@ Parameters:
     Type: String
     Default: CloudWatchUserFunctionRole
 
+  SSMParameterPublicKeyName:
+    Type: String
+    Default: auth-server-pub-key-dev
+
 Resources:
   createCWUserFunction:
     Type: AWS::Serverless::Function
@@ -124,6 +128,15 @@ Resources:
                   - "sts:AssumeRole"
                 Resource:
                   - !Sub "arn:aws:iam::*:role/${FunctionRole}"
+        - PolicyName: ssm
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameter'
+              Resource:
+                - !Sub 'arn:aws:ssm:eu-west-1:*:parameter/${SSMParameterPublicKeyName}'
 
   CWUsersApiGatewayRestApi:
     Type: "AWS::ApiGateway::RestApi"
@@ -139,6 +152,9 @@ Resources:
       Name: cwusers-authorizer
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Type: TOKEN
+      Environment:
+        Variables:
+          SSM_PUBLIC_KEY_NAME: !Ref SSMParameterPublicKeyName
 
   APIAuthorizerFunction:
     Type: "AWS::Serverless::Function"

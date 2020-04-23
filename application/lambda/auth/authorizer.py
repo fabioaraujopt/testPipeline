@@ -3,6 +3,7 @@ import re
 import uuid
 import boto3
 import auth
+import os
 
 API_OPERATIONS = {
     "CreateCloudWatchUser" : "eb07c9a0-609a-497e-961c-26717c897324",
@@ -28,6 +29,7 @@ RESOURCES_GUID = {
 public_key = "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq/hJMdtgP6ke45tP4i/o3aq1Kx+p7iPGkDe+fHxJnCRJ6BK3DurVq+OY80dNq8lkiF8OA9kNADJTH/UUu/C8xyC9v++xoXcBwGtVKp7b/UeO2V9+iUGlNxNs0GDcLAAbahWzEUZQiGjBTjeDOVd6sfG9rlpjbTaOXUnTIJKzfJm/tWXYVYrETRISPR3JxUu+oZh9rnO4CM3gG2iby4mTwyIohtyojQcmLtUlkurYGmc+vUgBe+Pq9lnI9lI5tjh4Indh1sB/ExTMLULaWJYWPfYpTnqnQ3vNy0jDek6klssW7lv2LcKlVHtumn6NdXgDw6V+rfOjFIn6DIP0JAGh9QIDAQAB-----END PUBLIC KEY-----"
 
 
+
 logger = logging.getLogger(name=__name__)
 log_level = logging.INFO
 logger.setLevel(log_level)
@@ -38,6 +40,16 @@ ssm_client = boto3.client('ssm')
 def lambda_handler(event, context):
     
     logger.info(event)
+
+    
+    resp = ssm_client.get_parameter(
+        Name=os.environ['PublicKeyName'],
+    )
+    if resp["Parameter"]["Value"]:
+        public_key = resp["Parameter"]["Value"]
+    else:
+        raise NameError("Public Key was not found within ssm response.")
+
     
     client_token = event['authorizationToken']
 
@@ -78,6 +90,22 @@ def lambda_handler(event, context):
         raise NameError(f"Invalid method name: {method}")
 
     '''
+      return {
+      "principalId": "user",
+      "policyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Action": "execute-api:Invoke",
+            "Effect": "Allow",
+            "Resource": "arn:aws:execute-api:us-east-1:*:*/*/*/*"
+          }
+        ]
+      }
+    }
+
+
+
     Typically the event has 3 keys:
     {
         "type":"TOKEN",
