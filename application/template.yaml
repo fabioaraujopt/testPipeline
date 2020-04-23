@@ -147,7 +147,7 @@ Resources:
       Handler: authorizer.lambda_handler
       Role: !GetAtt CWUserFunctionRole.Arn
       Layers: 
-        -arn:aws:lambda:eu-west-1:920101814014:layer:temporary-db-backup-layer:2
+        - arn:aws:lambda:eu-west-1:920101814014:layer:api-authorization-layer:1
       Runtime: python3.6
 
   ApiAuthorizerFunctionPermission:
