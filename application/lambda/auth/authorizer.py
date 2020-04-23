@@ -2,7 +2,7 @@ import logging
 import re
 import uuid
 import boto3
-#import auth
+import auth
 
 API_OPERATIONS = {
     "CreateCloudWatchUser" : "eb07c9a0-609a-497e-961c-26717c897324",
@@ -25,7 +25,7 @@ RESOURCES_GUID = {
     }
 }
 
-public_key = "PFJTQUtleVZhbHVlPjxNb2R1bHVzPmhVRWxmNytBRE1nUHEvcmV0NDArZ1lQaVZWZjhDQzdjc0NVZzRMMGpaeC9xeFU3WEJHN1plUEpWZ3c2TzJZdXFFcFFocTh5a0Q4Y0tmbVExNnVmaDVDcDk0VmhReFl6bGdTY2p3aUdkbFUvUzh0WDROY1ZmOGZJb1hHRDdkV0tQalV6V3RtUC9MM0h3alpXU1J4L3hDUzRsWjFvZThRRnEzQjZxMVJ0czdneTZIaDhKZXlNYXlrNVp1RlpZcVBGWmIxU21PZkJXRFkvZWkxK1duUVFrb1MyYjNwVGhxakdUTk5oWGFMdGZtV05xK1dnMEpZWVdkVTd6NE94dUlCbjJvL3NWQUVRT0piSEZzb2FUckFoajI1NmhBb0J6WjlKWlJUSmhIelcweEJXYWRLVEVMcDd3R3dPK0xiMWR1KzJXOGpxdWJVSWZyUFByWkJncnFST0tZUT09PC9Nb2R1bHVzPjxFeHBvbmVudD5BUUFCPC9FeHBvbmVudD48L1JTQUtleVZhbHVlPg=="
+public_key = "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq/hJMdtgP6ke45tP4i/o3aq1Kx+p7iPGkDe+fHxJnCRJ6BK3DurVq+OY80dNq8lkiF8OA9kNADJTH/UUu/C8xyC9v++xoXcBwGtVKp7b/UeO2V9+iUGlNxNs0GDcLAAbahWzEUZQiGjBTjeDOVd6sfG9rlpjbTaOXUnTIJKzfJm/tWXYVYrETRISPR3JxUu+oZh9rnO4CM3gG2iby4mTwyIohtyojQcmLtUlkurYGmc+vUgBe+Pq9lnI9lI5tjh4Indh1sB/ExTMLULaWJYWPfYpTnqnQ3vNy0jDek6klssW7lv2LcKlVHtumn6NdXgDw6V+rfOjFIn6DIP0JAGh9QIDAQAB-----END PUBLIC KEY-----"
 
 
 logger = logging.getLogger(name=__name__)
@@ -79,7 +79,7 @@ def lambda_handler(event, context):
     #check if guid empty
     guid = RESOURCES_GUID[resource][method]
 
-    auth.validate_token(client_token, public_key, guid)
+    print(auth.validate_token(client_token, public_key, guid))
     
     return True
 

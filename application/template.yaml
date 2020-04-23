@@ -138,8 +138,7 @@ Resources:
       IdentitySource: method.request.header.Authorization
       Name: cwusers-authorizer
       RestApiId: !Ref CWUsersApiGatewayRestApi
-      #Layers: 
-      #  - !Ref AuthLayer
+      Layers: !Ref temporary-db-backup-layer
       Type: TOKEN
 
   APIAuthorizerFunction:
@@ -293,7 +292,7 @@ Resources:
       RequestModels: 
         application/json: !Ref CWUsersRequestModel
 
-    # API Stage Deployment
+
   CwUsersApiGatewayBetaStageDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
