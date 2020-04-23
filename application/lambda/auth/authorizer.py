@@ -4,7 +4,6 @@ import uuid
 import boto3
 import auth
 import os
-import cwexceptions
 
 RESOURCES_GUID = {
     "user" : {
@@ -40,7 +39,6 @@ def lambda_handler(event, context):
     else:
         raise NameError("Public Key was not found within ssm response.")
 
-    logger.info(public_key)
     
     client_token = event['authorizationToken']
 
@@ -68,26 +66,153 @@ def lambda_handler(event, context):
     
     try:
         auth.validate_token(client_token, public_key, guid)
-    except (
-        cwexceptions.InvalidBearerPattern,
-        cwexceptions.InvalidTokenHeader,
-        cwexceptions.InvalidTokenFormat,
-        cwexceptions.InvalidTokenSignature,
-        cwexceptions.ExpiredToken,
-    ):
-        logger.error("The token is invalid/expired.")
-        # token is not from Auth Server or is invalid/expired (401)
+    except Exception as e:
+        logger.error(e)
         raise Exception("Unauthorized")
-    except cwexceptions.InvalidTokenCapabilities:
-        # everything is valid, except for the capabilities (403)
-        logger.error("The token is valid, but has incorrect capabilities")
-        policy.deny_all_methods()
-    else:
-        # valid token for the requested method
-        policy.allow_method(method, '*')
+    
+    policy.allow_method(method, '*')
     
     auth_response = policy.build()
     
     logger.info(auth_response)
 
     return auth_response
+
+
+class HttpVerb:
+    GET = 'GET'
+    POST = 'POST'
+    PUT = 'PUT'
+    PATCH = 'PATCH'
+    HEAD = 'HEAD'
+    DELETE = 'DELETE'
+    OPTIONS = 'OPTIONS'
+    ALL = '*'
+
+
+class AuthPolicy:
+    aws_account_id = ''
+    principal_id = ''
+    version = '2012-10-17'
+    path_regex = r'^[/.a-zA-Z0-9-*]+$'
+
+    '''Internal lists of allowed and denied methods.
+    These are lists of objects and each object has 1 property: A resource
+    ARN. The build method processes these lists and generates the approriate
+    statements for the final policy.
+    '''
+    allow_methods = []
+    deny_methods = []
+    rest_api_id = '*'
+    region = '*'
+    stage = '*'
+
+    def __init__(self, principal, aws_account_id):
+        self.aws_account_id = aws_account_id
+        self.principal_id = principal
+        self.allow_methods = []
+        self.deny_methods = []
+
+    def _add_method(self, effect, verb, resource):
+        '''
+        Adds a method to the internal lists of allowed or denied methods.
+        Each object in the internal list contains a resource ARN and a
+        condition statement. The condition statement can be null.
+        '''
+
+        if verb != '*' and not hasattr(HttpVerb, verb):
+            raise NameError(
+                f"Invalid HTTP verb {verb}.",
+            )
+        resource_pattern = re.compile(self.path_regex)
+        if not resource_pattern.match(resource):
+            raise NameError(
+                f"Invalid resource path: {resource}."
+                f" Path should match {self.path_regex}",
+            )
+
+        if resource[:1] == '/':
+            resource = resource[1:]
+
+        resource_arn = (
+            f"arn:aws:execute-api:{self.region}:{self.aws_account_id}:"
+            f"{self.rest_api_id}/{self.stage}/{verb}/{resource}"
+        )
+
+        if effect.lower() == 'allow':
+            self.allow_methods.append(
+                {
+                    'resourceArn': resource_arn,
+                },
+            )
+        elif effect.lower() == 'deny':
+            self.deny_methods.append(
+                {
+                    'resourceArn': resource_arn,
+                },
+            )
+
+    def _get_empty_statement(self, effect):
+        '''
+        Returns an empty statement object prepopulated with the correct
+        action and the desired effect.
+        '''
+        statement = {
+            'Action': 'execute-api:Invoke',
+            'Effect': effect[:1].upper() + effect[1:].lower(),
+            'Resource': [],
+        }
+        return statement
+
+    def _get_statement_for_effect(self, effect, methods):
+        '''This function loops over an array of objects containing a
+         resourceArn and conditions statement and generates the array of
+          statements for the policy.'''
+        statements = []
+
+        if methods:
+            statement = self._get_empty_statement(effect)
+
+            for cur_method in methods:
+                statement['Resource'].append(cur_method['resourceArn'])
+
+            if statement['Resource']:
+                statements.append(statement)
+        return statements
+
+    def deny_all_methods(self):
+        '''Adds a '*' allow to the policy to deny access to all methods of
+            an API'''
+        self._add_method('Deny', HttpVerb.ALL, '*')
+
+    def allow_method(self, verb, resource):
+        '''Adds an API Gateway method (Http verb + Resource path) to the list
+        of allowed methods for the policy'''
+        self._add_method('Allow', verb, resource)
+
+    def build(self):
+        '''
+        Generates the policy document based on the internal lists of
+        allowed and denied conditions. This will generate a policy with
+        two main statements for the effect: one statement for Allow and
+         one statement for Deny.
+         '''
+        if ((self.allow_methods is None or not self.allow_methods) and
+                (self.deny_methods is None or not self.deny_methods)):
+            raise NameError("No statements defined for the policy")
+
+        policy = {
+            'principalId': self.principal_id,
+            'policyDocument': {
+                'Version': self.version,
+                'Statement': [],
+            },
+        }
+        policy['policyDocument']['Statement'].extend(
+            self._get_statement_for_effect('Allow', self.allow_methods),
+        )
+        policy['policyDocument']['Statement'].extend(
+            self._get_statement_for_effect('Deny', self.deny_methods),
+        )
+
+        return policy
