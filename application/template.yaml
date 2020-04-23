@@ -152,9 +152,6 @@ Resources:
       Name: cwusers-authorizer
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Type: TOKEN
-      Environment:
-        Variables:
-          SSM_PUBLIC_KEY_NAME: !Ref SSMParameterPublicKeyName
 
   APIAuthorizerFunction:
     Type: "AWS::Serverless::Function"
@@ -165,6 +162,9 @@ Resources:
       Layers: 
         - arn:aws:lambda:eu-west-1:920101814014:layer:api-authorization-layer:1
       Runtime: python3.6
+      Environment:
+        Variables:
+          SSM_PUBLIC_KEY_NAME: !Ref SSMParameterPublicKeyName
 
   ApiAuthorizerFunctionPermission:
     Type: AWS::Lambda::Permission
