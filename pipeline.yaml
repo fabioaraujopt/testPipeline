@@ -45,7 +45,7 @@ Resources:
     BuildArtifactsBucket:
         Type: AWS::S3::Bucket
         Properties:
-            BucketName: !Sub ${ProjectName}-build-artifacts
+            BucketName: !Sub cwusers-build-artifacts
             BucketEncryption:
                 ServerSideEncryptionConfiguration:
                     - ServerSideEncryptionByDefault:
