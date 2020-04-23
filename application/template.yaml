@@ -20,8 +20,8 @@ Parameters:
     Description: Policy that lives in foreign accounts and regulates activity of lambda functions that crud cloudwatch users.
     Type: String
     Default: CloudWatchUserFunctionRole
-
   SSMParameterPublicKeyName:
+    Description: Name of public key used to decrypt OS authorization tokens.
     Type: String
     Default: auth-server-pub-key-dev
 
