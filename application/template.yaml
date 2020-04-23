@@ -138,7 +138,6 @@ Resources:
       IdentitySource: method.request.header.Authorization
       Name: cwusers-authorizer
       RestApiId: !Ref CWUsersApiGatewayRestApi
-      Layers: !Ref temporary-db-backup-layer
       Type: TOKEN
 
   APIAuthorizerFunction:
@@ -147,6 +146,8 @@ Resources:
       CodeUri: ./lambda/auth
       Handler: authorizer.lambda_handler
       Role: !GetAtt CWUserFunctionRole.Arn
+      Layers: 
+        -arn:aws:lambda:eu-west-1:920101814014:layer:temporary-db-backup-layer:2
       Runtime: python3.6
 
   ApiAuthorizerFunctionPermission:
