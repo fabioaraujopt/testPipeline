@@ -50,6 +50,7 @@ def lambda_handler(event, context):
     else:
         raise NameError("Public Key was not found within ssm response.")
 
+    logger.info(public_key)
     
     client_token = event['authorizationToken']
 
