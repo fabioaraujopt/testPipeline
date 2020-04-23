@@ -38,22 +38,6 @@ ssm_client = boto3.client('ssm')
 def lambda_handler(event, context):
     
     logger.info(event)
-
-
-    return {
-      "principalId": "user",
-      "policyDocument": {
-        "Version": "2012-10-17",
-        "Statement": [
-          {
-            "Action": "execute-api:Invoke",
-            "Effect": "Allow",
-            "Resource": "arn:aws:execute-api:us-east-1:*:*/*/*/*"
-          }
-        ]
-      }
-    }
-
     
     client_token = event['authorizationToken']
 
