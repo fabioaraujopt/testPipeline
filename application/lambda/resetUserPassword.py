@@ -38,7 +38,7 @@ def _reset_user_password_cloudwatch_account(account_id, username):
 
     iam = configureIamClient(session)
 
-    user = configureUserClient(iam,username)
+    user = configureUserClient(iam, username)
 
     user.load()
     

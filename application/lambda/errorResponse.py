@@ -11,6 +11,9 @@ known_error_codes = {
 }
 
 def errorResponse(exception):
+    
+    exception = exception.response['Error']['Code']
+
     try:
         error_code = known_error_codes[exception]
     except KeyError:
