@@ -70,10 +70,11 @@ def _create_cloud_watch_account(account_id, username):
         )
     except ClientError as error:
         logger.exception(error)
-        user.LoginProfile().create(
-            Password=password,
-            PasswordResetRequired=True
-        )
+        if error.response['Error']['Code'] == NO_SUCH_ENTITY:
+            user.LoginProfile().create(
+                Password=password,
+                PasswordResetRequired=True
+            )
 
     user.attach_policy(PolicyArn=policy_arn)     
 

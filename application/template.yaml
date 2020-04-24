@@ -50,7 +50,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: reser_user_password.lambda_handler
+      Handler: reset_user_password.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
