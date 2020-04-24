@@ -32,6 +32,7 @@ Resources:
       CodeUri: ./lambda
       Handler: createUser.lambda_handler
       Runtime: python3.6
+      FunctionName: createCloudWatchUser
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
         Variables:
@@ -51,6 +52,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: resetUserPassword.lambda_handler
+      FunctionName: resetPasswordCloudWatchUser
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
@@ -72,6 +74,7 @@ Resources:
       CodeUri: ./lambda
       Handler: deleteUser.lambda_handler
       Runtime: python3.6
+      FunctionName: deleteCloudWatchUser
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
         Variables:
@@ -93,6 +96,7 @@ Resources:
       Handler: updatePolicy.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
+      FunctionName: updateCloudWatchUserPolicy
       Environment:
         Variables:
           USER_POLICY: !Ref UserPolicy
