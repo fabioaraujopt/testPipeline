@@ -30,7 +30,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: createUser.lambda_handler
+      Handler: create_user.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
@@ -50,7 +50,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: resetUserPassword.lambda_handler
+      Handler: reser_user_password.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
@@ -70,7 +70,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: deleteUser.lambda_handler
+      Handler: delete_user.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:
@@ -90,7 +90,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: updatePolicy.lambda_handler
+      Handler: update_policy.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Environment:

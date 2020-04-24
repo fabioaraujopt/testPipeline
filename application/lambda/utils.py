@@ -8,23 +8,23 @@ import logging
 NO_SUCH_ENTITY = "NoSuchEntity"
 
 
-def loggingConfig():
+def logging_config():
     logger = logging.getLogger(name=__name__)
     log_level = logging.INFO
     logger.setLevel(log_level)
     
     return logger
 
-def configureIamClient(session):
+def configure_iam_client(session):
     return session.resource('iam')
 
-def configureUserClient(iam, username):
+def configure_user_client(iam, username):
     return iam.User(username)
 
-def configureUserPolicy(account_id):
+def configure_user_policy(account_id):
     return "arn:aws:iam::{}:policy/{}".format(account_id, os.environ['USER_POLICY'])
 
-def assumeRole(account_id, role_to_assume):
+def assume_role(account_id, role_to_assume):
     
     sts = boto3.client("sts")
     
@@ -52,7 +52,7 @@ def assumeRole(account_id, role_to_assume):
     
     return session
 
-def genPass(length):
+def genpass(length):
     """Generate a random password.
     Args:
         length(int): Password length
