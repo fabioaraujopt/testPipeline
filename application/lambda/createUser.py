@@ -1,85 +1,81 @@
 import json
-import botocore
-import logging
 import os
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass
+from utils import assumeRole, genPass, configureUserClient, \
+    configureUserPolicy, configureIamClient, loggingConfig, NO_SUCH_ENTITY
 
-logger = logging.getLogger(name=__name__)
-log_level = logging.INFO
-logger.setLevel(log_level)
+
+logger = loggingConfig()
 
 def lambda_handler(event, context):
 
     logger.info(event)
 
-    accountId = event['pathParameters']['account-id']
+    account_id = event['pathParameters']['account-id']
 
-    eventBody = json.loads(event["body"])
+    event_body = json.loads(event["body"])
 
-    username = eventBody["username"]
+    username = event_body["username"]
 
     try:
-        response = createCloudWatchAccount(accountId,username)
-    except ClientError as e:
-        logger.exception(e)
-        return errorResponse(e)
+        response = _create_cloud_watch_account(account_id, username)
+    except ClientError as error:
+        logger.exception(error)
+        return errorResponse(error)
 
     return {
         'statusCode': 200,
         'body': json.dumps(response)
     }
 
-def createCloudWatchAccount(AWSAccountId,username):
-
-    session = assume_role(AWSAccountId,os.environ['FUNCTION_POLICY'])
-
-    iam = session.resource('iam')
+def _create_cloud_watch_account(account_id, username):
     
-    user = iam.User(username)
+    session = assumeRole(account_id, os.environ['FUNCTION_POLICY'])
 
-    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,os.environ['USER_POLICY'])
+    iam = configureIamClient(session)
+
+    user = configureUserClient(iam, username)
+
+    policy_arn = configureUserPolicy(account_id)
 
     try:
-        policy = iam.Policy(policyArn).load()
-    except ClientError as e:
-        logger.exception(e)
+        iam.Policy(policy_arn).load()
+    except ClientError as error:
+        logger.exception(error)
 
         with open('./policies/CloudWatchUserPolicy.json') as f:
-            repoPolicy = json.load(f)
+            repo_policy = json.load(f)
             
         iam.create_policy(
             PolicyName=os.environ['USER_POLICY'],
-            PolicyDocument=json.dumps(repoPolicy)
+            PolicyDocument=json.dumps(repo_policy)
         )
 
     try:
         user.load()
-    except ClientError as e:
-        logger.exception(e)
+    except ClientError as error:
+        logger.exception(error)
 
-        if e.response['Error']['Code'] == 'NoSuchEntity':
+        if error.response['Error']['Code'] == NO_SUCH_ENTITY:
              user.create()
     
-    password = genpass(8)
+    password = genPass(8)
 
     try:
         user.LoginProfile().load()
-        
         user.LoginProfile().update(
             Password=password,
             PasswordResetRequired=True
         )
-    except ClientError as e:
-        logger.exception(e)
-
+    except ClientError as error:
+        logger.exception(error)
         user.LoginProfile().create(
             Password=password,
             PasswordResetRequired=True
         )
-   
-    user.attach_policy(PolicyArn=policyArn)   
+
+    user.attach_policy(PolicyArn=policy_arn)     
 
     return {
         'username' : username,

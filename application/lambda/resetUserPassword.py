@@ -4,28 +4,27 @@ import logging
 import os
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass
+from utils import assumeRole, genPass, \
+    configureUserPolicy, configureIamClient, loggingConfig, configureUserClient
 
-logger = logging.getLogger(name=__name__)
-log_level = logging.INFO
-logger.setLevel(log_level)
 
+logger = loggingConfig()
 
 def lambda_handler(event, context):
 
     logger.info(event)
 
-    accountId = event['pathParameters']['account-id']
+    account_id = event['pathParameters']['account-id']
 
-    eventBody = json.loads(event["body"])
+    event_body = json.loads(event["body"])
 
-    username = eventBody["username"]
+    username = event_body["username"]
 
     try:
-        response = resetUserPasswordCloudWatchAccount(accountId,username)
-    except ClientError as e:
-        logger.exception(e)
-        return errorResponse(e)
+        response = _reset_user_password_cloudwatch_account(account_id, username)
+    except ClientError as error:
+        logger.exception(error)
+        return errorResponse(error)
 
     return {
         'statusCode': 200,
@@ -33,17 +32,17 @@ def lambda_handler(event, context):
     }
 
 
-def resetUserPasswordCloudWatchAccount(AWSAccountId,username):
+def _reset_user_password_cloudwatch_account(account_id, username):
     
-    session = assume_role(AWSAccountId,os.environ['FUNCTION_POLICY'])
+    session = assumeRole(account_id, os.environ['FUNCTION_POLICY'])
 
-    iam = session.resource('iam')
+    iam = configureIamClient(session)
 
-    user = iam.User(username)
+    user = configureUserClient(iam,username)
 
     user.load()
     
-    password = genpass(8)
+    password = genPass(8)
 
     user.LoginProfile().load()
 

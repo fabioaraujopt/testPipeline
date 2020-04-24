@@ -29,7 +29,6 @@ ssm_client = boto3.client('ssm')
 def lambda_handler(event, context):
     
     logger.info(event)
-
     
     resp = ssm_client.get_parameter(
         Name=os.environ['SSM_PUBLIC_KEY_NAME'],
@@ -39,7 +38,6 @@ def lambda_handler(event, context):
     else:
         raise NameError("Public Key was not found within ssm response.")
 
-    
     client_token = event['authorizationToken']
 
     method_arn = event['methodArn']
@@ -61,7 +59,6 @@ def lambda_handler(event, context):
     policy.region = tmp[3]
     policy.stage = api_gateway_arn_tmp[1]
 
-    #check if guid empty
     guid = RESOURCES_GUID[resource][method]
     
     try:
@@ -121,9 +118,7 @@ class AuthPolicy:
         '''
 
         if verb != '*' and not hasattr(HttpVerb, verb):
-            raise NameError(
-                f"Invalid HTTP verb {verb}.",
-            )
+            raise NameError(f"Invalid HTTP verb {verb}.",)
         resource_pattern = re.compile(self.path_regex)
         if not resource_pattern.match(resource):
             raise NameError(

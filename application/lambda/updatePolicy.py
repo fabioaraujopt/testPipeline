@@ -4,70 +4,68 @@ import logging
 import os
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass
+from utils import assumeRole, genPass, configureUserClient,\
+    configureUserPolicy, configureIamClient, loggingConfig, NO_SUCH_ENTITY
 
-logger = logging.getLogger(name=__name__)
-log_level = logging.INFO
-logger.setLevel(log_level)
-
+logger = loggingConfig()
 
 def lambda_handler(event, context):
 
     logger.info(event)
 
-    accountId = event['pathParameters']['account-id']
+    account_id = event['pathParameters']['account-id']
 
     try:
-        response = updateCloudWatchPolicy(accountId)
-    except ClientError as e:
-        logger.exception(e)
+        response = _update_cloudwatch_policy(account_id)
+    except ClientError as error:
+        logger.exception(error)
 
-        return errorResponse(e)
+        return errorResponse(error)
 
     return {
         'statusCode': 200,
         'body': json.dumps(response)
     }
 
-def updateCloudWatchPolicy(AWSAccountId):
+def _update_cloudwatch_policy(account_id):
     
-    session = assume_role(AWSAccountId,os.environ['FUNCTION_POLICY'])
+    session = assumeRole(account_id, os.environ['FUNCTION_POLICY'])
 
-    iam = session.client('iam')
-    
-    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,os.environ['USER_POLICY'])
+    iam = configureIamClient(session)
+
+    policy_arn = configureUserPolicy(account_id)
 
     with open('./policies/CloudWatchUserPolicy.json') as f:
-            repoPolicy = json.load(f)
+            repo_policy = json.load(f)
     
     try:
         policy = iam.get_policy(
-            PolicyArn=policyArn
+            PolicyArn=policy_arn
         )
-    except ClientError as e:
-        logger.exception(e)
+    except ClientError as error:
+        logger.exception(error)
 
-        if e.response['Error']['Code'] == 'NoSuchEntity':  
+        if error.response['Error']['Code'] == NO_SUCH_ENTITY:  
             policy = iam.create_policy(
-                PolicyName=userPolicyName,
-                PolicyDocument=json.dumps(repoPolicy),
+                PolicyName=os.environ['USER_POLICY'],
+                PolicyDocument=json.dumps(repo_policy),
             )
         
-    policyDefaultVersion = iam.get_policy_version(
-        PolicyArn=policyArn,
+    policy_default_version = iam.get_policy_version(
+        PolicyArn=policy_arn,
         VersionId=policy["Policy"]["DefaultVersionId"]
     )
     
-    policyDocument = policyDefaultVersion["PolicyVersion"]["Document"]
+    policy_document = policy_default_version["PolicyVersion"]["Document"]
     
-    if(policyDocument != repoPolicy):
-        response = iam.create_policy_version(
-            PolicyArn=policyArn,
-            PolicyDocument=json.dumps(repoPolicy),
+    if policy_document != repo_policy:
+        iam.create_policy_version(
+            PolicyArn=policy_arn,
+            PolicyDocument=json.dumps(repo_policy),
             SetAsDefault=True
         )
     
     return {
-        'policy_arn': policyArn
+        'policy_arn': policy_arn
     }
     

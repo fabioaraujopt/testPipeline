@@ -1,15 +1,34 @@
 import boto3
 import botocore
-import secrets
 import string
 import random
+import os
+import logging
+
+NO_SUCH_ENTITY = "NoSuchEntity"
 
 
-def assume_role(account_id,role_to_assume):
+def loggingConfig():
+    logger = logging.getLogger(name=__name__)
+    log_level = logging.INFO
+    logger.setLevel(log_level)
+    
+    return logger
+
+def configureIamClient(session):
+    return session.resource('iam')
+
+def configureUserClient(iam, username):
+    return iam.User(username)
+
+def configureUserPolicy(account_id):
+    return "arn:aws:iam::{}:policy/{}".format(account_id, os.environ['USER_POLICY'])
+
+def assumeRole(account_id, role_to_assume):
     
     sts = boto3.client("sts")
     
-    role_arn = "arn:aws:iam::{}:role/{}".format(account_id,role_to_assume)
+    role_arn = "arn:aws:iam::{}:role/{}".format(account_id, role_to_assume)
 
     try:
         resp = sts.assume_role(
@@ -33,13 +52,7 @@ def assume_role(account_id,role_to_assume):
     
     return session
 
-def isUsernameInGroup(iamGroup, username):
-    for user in iamGroup["Users"]:
-        if user["UserName"] == username:
-            return True
-    return False
-
-def genpass(length):
+def genPass(length):
     """Generate a random password.
     Args:
         length(int): Password length

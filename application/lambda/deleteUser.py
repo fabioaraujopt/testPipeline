@@ -1,29 +1,28 @@
 import json
 import botocore
-import logging
 import os
 from botocore.exceptions import ClientError
 from errorResponse import errorResponse
-from utils import assume_role, genpass
+from utils import assumeRole, configureUserClient, configureUserPolicy,\
+    configureUserPolicy, configureIamClient, loggingConfig, NO_SUCH_ENTITY
 
-logger = logging.getLogger(name=__name__)
-log_level = logging.INFO
-logger.setLevel(log_level)
+
+logger = loggingConfig()
 
 def lambda_handler(event, context):
 
     logger.info(event)
 
-    accountId = event['pathParameters']['account-id']
+    account_id = event['pathParameters']['account-id']
     
-    eventBody = json.loads(event["body"])
+    event_body = json.loads(event["body"])
 
-    username = eventBody["username"]
+    username = event_body["username"]
 
     try:
-        response = deleteUserCloudWatchAccount(accountId,username)
-    except ClientError as e:
-        return errorResponse(e)
+        response = _delete_user_cloudwatch_account(account_id, username)
+    except ClientError as error:
+        return errorResponse(error)
 
     return {
         'statusCode': 200,
@@ -31,46 +30,43 @@ def lambda_handler(event, context):
     }
 
 
-def deleteUserCloudWatchAccount(AWSAccountId,username):
-    
-    session = assume_role(AWSAccountId,os.environ['FUNCTION_POLICY'])
+def _delete_user_cloudwatch_account(account_id, username):
 
-    iam = session.resource('iam')
+    session = assumeRole(account_id, os.environ['FUNCTION_POLICY'])
 
-    user = iam.User(username)
+    iam = configureIamClient(session)
 
-    policyArn = "arn:aws:iam::{}:policy/{}".format(AWSAccountId,os.environ['USER_POLICY'])
+    user = configureUserClient(iam, username)
+
+    policy_arn = configureUserPolicy(account_id)
 
     try:
         user.load()
-    except ClientError as e:
-        logger.exception(e)
+    except ClientError as error:
+        logger.exception(error)
 
-        if e.response['Error']['Code'] == 'NoSuchEntity':
+        if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             return {
                 'username' : username
             }
     
     try:
-        user.detach_policy(PolicyArn=policyArn)
-    except ClientError as e:
-        logger.exception(e)
+        user.detach_policy(PolicyArn=policy_arn)
+    except ClientError as error:
+        logger.exception(error)
 
-        if e.response['Error']['Code'] == 'NoSuchEntity':
+        if error.response['Error']['Code'] == 'NoSuchEntity':
             pass
 
     try:
         user.LoginProfile().load()
-        
         user.LoginProfile().delete()
     except:
         pass
     
     user.delete()
 
-    return {
-        'username' : username
-        }
+    return {'username' : username}
     
     
 
