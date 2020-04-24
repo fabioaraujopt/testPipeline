@@ -43,7 +43,7 @@ def _create_cloud_watch_account(account_id, username):
         iam.Policy(policy_arn).load()
     except ClientError as error:
         logger.error(error)
-        
+
         with open('./policies/CloudWatchUserPolicy.json') as f:
             repo_policy = json.load(f)
             
@@ -60,7 +60,7 @@ def _create_cloud_watch_account(account_id, username):
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             user.create()
     
-    password = genass(8)
+    password = genpass(8)
 
     try:
         user.LoginProfile().load()
