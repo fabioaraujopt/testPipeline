@@ -12,29 +12,32 @@ def logging_config():
     logger = logging.getLogger(name=__name__)
     log_level = logging.INFO
     logger.setLevel(log_level)
-    
+
     return logger
+
 
 def configure_iam_client(session):
     return session.resource('iam')
 
+
 def configure_user_client(iam, username):
     return iam.User(username)
+
 
 def configure_user_policy(account_id):
     return "arn:aws:iam::{}:policy/{}".format(account_id, os.environ['USER_POLICY'])
 
+
 def assume_role(account_id, role_to_assume):
-    
     sts = boto3.client("sts")
-    
+
     role_arn = "arn:aws:iam::{}:role/{}".format(account_id, role_to_assume)
 
     try:
         resp = sts.assume_role(
             RoleArn=role_arn,
             RoleSessionName="CloudWatchService")
-        
+
     except botocore.exceptions.ClientError as e:
         raise e
 
@@ -44,13 +47,14 @@ def assume_role(account_id, role_to_assume):
                         account_id)
 
     creds = resp["Credentials"]
-    
+
     session = boto3.Session(
         aws_access_key_id=creds["AccessKeyId"],
         aws_secret_access_key=creds["SecretAccessKey"],
         aws_session_token=creds["SessionToken"])
-    
+
     return session
+
 
 def genpass(length):
     """Generate a random password.

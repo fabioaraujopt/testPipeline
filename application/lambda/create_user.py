@@ -5,11 +5,10 @@ from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
     configure_user_policy, configure_iam_client, logging_config, NO_SUCH_ENTITY
 
-
 logger = logging_config()
 
-def lambda_handler(event, context):
 
+def lambda_handler(event, context):
     logger.info(event)
 
     account_id = event['pathParameters']['account-id']
@@ -29,8 +28,8 @@ def lambda_handler(event, context):
         'body': json.dumps(response)
     }
 
+
 def _create_cloud_watch_account(account_id, username):
-    
     session = assume_role(account_id, os.environ['FUNCTION_POLICY'])
 
     iam = configure_iam_client(session)
@@ -46,7 +45,7 @@ def _create_cloud_watch_account(account_id, username):
 
         with open('./policies/CloudWatchUserPolicy.json') as f:
             repo_policy = json.load(f)
-            
+
         iam.create_policy(
             PolicyName=os.environ['USER_POLICY'],
             PolicyDocument=json.dumps(repo_policy)
@@ -59,7 +58,7 @@ def _create_cloud_watch_account(account_id, username):
 
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             user.create()
-    
+
     password = genpass(8)
 
     try:
@@ -76,10 +75,9 @@ def _create_cloud_watch_account(account_id, username):
                 PasswordResetRequired=True
             )
 
-    user.attach_policy(PolicyArn=policy_arn)     
+    user.attach_policy(PolicyArn=policy_arn)
 
     return {
-        'username' : username,
+        'username': username,
         'password': password
     }
-

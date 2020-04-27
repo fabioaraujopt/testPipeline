@@ -8,12 +8,12 @@ from utils import assume_role, genpass, configure_user_client, \
 
 logger = logging_config()
 
-def lambda_handler(event, context):
 
+def lambda_handler(event, context):
     logger.info(event)
 
     account_id = event['pathParameters']['account-id']
-    
+
     event_body = json.loads(event["body"])
 
     username = event_body["username"]
@@ -25,12 +25,11 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
-        'body':  json.dumps(response)
+        'body': json.dumps(response)
     }
 
 
 def _delete_user_cloudwatch_account(account_id, username):
-
     session = assume_role(account_id, os.environ['FUNCTION_POLICY'])
 
     iam = configure_iam_client(session)
@@ -46,9 +45,9 @@ def _delete_user_cloudwatch_account(account_id, username):
 
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             return {
-                'username' : username
+                'username': username
             }
-    
+
     try:
         user.detach_policy(PolicyArn=policy_arn)
     except ClientError as error:
@@ -62,12 +61,7 @@ def _delete_user_cloudwatch_account(account_id, username):
         user.LoginProfile().delete()
     except Exception as error:
         logger.error(error)
-    
+
     user.delete()
 
-    return {'username' : username}
-    
-    
-
-
-
+    return {'username': username}
