@@ -10,8 +10,8 @@ phases:
           - cd $CODEBUILD_SRC_DIR
           - echo "Starting build `date` in `pwd`"
           - pwd
-          - cfn-lint --template application/template.yaml --regions $AWS_REGION
-          - aws cloudformation validate-template --template-body file://$(pwd)/aplication/template.yaml
+          #- cfn-lint --template application/template.yaml --regions $AWS_REGION
+          #- aws cloudformation validate-template --template-body file://$(pwd)/aplication/template.yaml
           - aws cloudformation package
                 --s3-bucket=${BUILD_OUTPUT_BUCKET}
                 --s3-prefix=${BUILD_OUTPUT_PREFIX}
