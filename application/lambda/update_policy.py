@@ -43,13 +43,14 @@ def _update_cloudwatch_policy(account_id):
             PolicyArn=policy_arn
         )
     except ClientError as error:
-        logger.exception(error)
-
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             policy = iam.create_policy(
                 PolicyName=os.environ['USER_POLICY'],
                 PolicyDocument=json.dumps(repo_policy),
             )
+            logger.info(error)
+        else:
+            logger.exception(error)
 
     policy_default_version = iam.get_policy_version(
         PolicyArn=policy_arn,

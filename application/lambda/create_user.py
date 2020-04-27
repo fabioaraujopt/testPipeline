@@ -54,10 +54,12 @@ def _create_cloud_watch_account(account_id, username):
     try:
         user.load()
     except ClientError as error:
-        logger.exception(error)
-
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             user.create()
+            logger.info(error)
+        else:
+            logger.exception(error)
+
 
     password = genpass(8)
 
@@ -68,12 +70,15 @@ def _create_cloud_watch_account(account_id, username):
             PasswordResetRequired=True
         )
     except ClientError as error:
-        logger.exception(error)
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
             user.LoginProfile().create(
                 Password=password,
                 PasswordResetRequired=True
             )
+            logger.info(error)
+        else:
+            logger.exception(error)
+
 
     user.attach_policy(PolicyArn=policy_arn)
 

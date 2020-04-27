@@ -41,20 +41,21 @@ def _delete_user_cloudwatch_account(account_id, username):
     try:
         user.load()
     except ClientError as error:
-        logger.exception(error)
-
         if error.response['Error']['Code'] == NO_SUCH_ENTITY:
+            logger.info(error)
             return {
                 'username': username
             }
+        else:
+            logger.exception(error)
 
     try:
         user.detach_policy(PolicyArn=policy_arn)
     except ClientError as error:
-        logger.exception(error)
-
         if error.response['Error']['Code'] == 'NoSuchEntity':
-            pass
+            logger.info(error)
+        else:
+            logger.exception(error)
 
     try:
         user.LoginProfile().load()
