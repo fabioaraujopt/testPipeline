@@ -13,8 +13,8 @@ def logging_config():
     log_level = logging.INFO
     logger.setLevel(log_level)
 
-    return logge
-
+    return logger
+    
 def configure_iam_client(session):
     client = session.client('iam')
 
