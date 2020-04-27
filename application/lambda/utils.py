@@ -14,9 +14,9 @@ def logging_config():
     logger.setLevel(log_level)
 
     return logger
-    
+
 def configure_iam_client(session):
-    client = session.client('iam')
+    return session.client('iam')
 
 
 def configure_iam_resource(session):
