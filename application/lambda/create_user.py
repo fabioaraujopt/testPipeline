@@ -3,7 +3,7 @@ import os
 from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_client, logging_config, NO_SUCH_ENTITY
+    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config, NO_SUCH_ENTITY
 
 logger = logging_config()
 
@@ -32,7 +32,7 @@ def lambda_handler(event, context):
 def _create_cloud_watch_account(account_id, username):
     session = assume_role(account_id, os.environ['FUNCTION_POLICY'])
 
-    iam = configure_iam_client(session)
+    iam = configure_iam_resource(session)
 
     user = configure_user_client(iam, username)
 

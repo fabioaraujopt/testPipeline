@@ -5,7 +5,7 @@ import os
 from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_client, logging_config
+    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config
 
 logger = logging_config()
 
@@ -34,7 +34,7 @@ def lambda_handler(event, context):
 def _reset_user_password_cloudwatch_account(account_id, username):
     session = assume_role(account_id, os.environ['FUNCTION_POLICY'])
 
-    iam = configure_iam_client(session)
+    iam = configure_iam_resource(session)
 
     user = configure_user_client(iam, username)
 
