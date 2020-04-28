@@ -48,14 +48,17 @@ def _delete_user_cloudwatch_account(account_id, username):
         user.detach_policy(PolicyArn=policy_arn)
         logger.info("Policy detached.")
     
-    return False
-
+    #if login profile was already deleted continue code execution 
+    #at current version there is no api to get list of login profiles
     try:
-        user.LoginProfile().load()
         user.LoginProfile().delete()
-    except Exception as error:
-        logger.error(error)
-
+    except ClientError as error:
+        if error.response['Error']['Code'] == NO_SUCH_ENTITY:
+            logger.warning("Login profile does not exist.")
+        else:
+            logger.error(error)
+            raise
+    
     user.delete()
 
     return {'username': username}

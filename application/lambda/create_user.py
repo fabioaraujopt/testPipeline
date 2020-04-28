@@ -61,7 +61,8 @@ def _create_cloud_watch_account(account_id, username):
     
     password = genpass(8)
     
-    #Todo explicit comment
+    #if login profile was already created continue code execution 
+    #at current version there is no api to get list of login profiles
     try:
         user.LoginProfile().create(
                 Password=password,
@@ -72,6 +73,7 @@ def _create_cloud_watch_account(account_id, username):
             logger.warning("User already exists.")
             login_profile_already_exists = True
         else:
+            logger.error(error)
             raise
     
     if login_profile_already_exists:

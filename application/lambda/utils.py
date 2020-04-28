@@ -46,7 +46,7 @@ def policy_attached_to_user(iam_client, username, policy_name):
         UserName=username
     )
     
-    for policy in response["Policies"]:
+    for policy in response["AttachedPolicies"]:
         if policy["PolicyName"] == policy_name:
             return True
     return False
