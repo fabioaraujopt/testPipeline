@@ -12,7 +12,6 @@ logger = logging_config()
 
 def lambda_handler(event, context):
   
-    
     logger.info(event)
 
     account_id = event['pathParameters']['account-id']
