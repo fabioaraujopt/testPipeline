@@ -3,7 +3,8 @@ import os
 from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config, NO_SUCH_ENTITY
+    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config, NO_SUCH_ENTITY, \
+    policy_exists, user_exists
 
 logger = logging_config()
 
@@ -34,15 +35,13 @@ def _create_cloud_watch_account(account_id, username):
 
     iam = configure_iam_resource(session)
 
+    iam_client = configure_iam_client(session)
+
     user = configure_user_client(iam, username)
 
     policy_arn = configure_user_policy(account_id)
 
-    try:
-        iam.Policy(policy_arn).load()
-    except ClientError as error:
-        logger.error(error)
-
+    if not policy_exists(iam_client, policy_arn):
         with open('./policies/CloudWatchUserPolicy.json') as f:
             repo_policy = json.load(f)
 
@@ -50,16 +49,11 @@ def _create_cloud_watch_account(account_id, username):
             PolicyName=os.environ['USER_POLICY'],
             PolicyDocument=json.dumps(repo_policy)
         )
+        logger.info("New policy created.")
 
-    try:
-        user.load()
-    except ClientError as error:
-        if error.response['Error']['Code'] == NO_SUCH_ENTITY:
-            user.create()
-            logger.info(error)
-        else:
-            logger.exception(error)
-
+    if not user_exists(iam_client, username):
+        user.create()
+        logger.info("New user created.")
 
     password = genpass(8)
 
@@ -78,7 +72,6 @@ def _create_cloud_watch_account(account_id, username):
             logger.info(error)
         else:
             logger.exception(error)
-
 
     user.attach_policy(PolicyArn=policy_arn)
 
