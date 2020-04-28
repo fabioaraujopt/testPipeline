@@ -43,6 +43,7 @@ def _delete_user_cloudwatch_account(account_id, username):
 
     if not user_exists(iam_client, username):
         return {'username': username}
+    
 
     try:
         user.detach_policy(PolicyArn=policy_arn)

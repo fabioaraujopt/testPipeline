@@ -9,7 +9,6 @@ from utils import assume_role, genpass, configure_user_client, \
 logger = logging_config()
 
 
-
 def lambda_handler(event, context):
   
     logger.info(event)
@@ -46,8 +45,7 @@ def _create_cloud_watch_account(account_id, username):
 
     policy_arn = configure_user_policy(account_id)
 
-    
-    if not policy_exists(iam_client, policy_arn):
+    if not policy_exists(iam_client, os.environ['USER_POLICY']):
         with open('./policies/CloudWatchUserPolicy.json') as f:
             repo_policy = json.load(f)
 
@@ -84,7 +82,6 @@ def _create_cloud_watch_account(account_id, username):
     
     user.attach_policy(PolicyArn=policy_arn)
         
-    
     return {
         'username': username,
         'password': password
