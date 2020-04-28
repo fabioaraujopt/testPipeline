@@ -6,6 +6,7 @@ import os
 import logging
 
 NO_SUCH_ENTITY = "NoSuchEntity"
+ENTITY_ALREADY_EXISTS = "EntityAlreadyExists"
 
 
 def logging_config():
@@ -17,6 +18,27 @@ def logging_config():
 
 def configure_iam_client(session):
     return session.client('iam')
+    
+
+def policy_exists(iam_client, policy_name):
+    
+    response = iam_client.list_policies(
+        Scope='All',
+        OnlyAttached=False
+    )
+    
+    for policy in response["Policies"]:
+        if policy["PolicyName"] == policy_name:
+            return True
+    return False
+    
+def user_exists(iam_client, username):
+    response = iam_client.list_users()
+    
+    for user in response["Users"]:
+        if user["UserName"] == username:
+            return True
+    return False
 
 
 def configure_iam_resource(session):
