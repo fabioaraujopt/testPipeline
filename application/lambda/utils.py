@@ -39,7 +39,19 @@ def user_exists(iam_client, username):
         if user["UserName"] == username:
             return True
     return False
+    
 
+def policy_attached_to_user(iam_client, username, policy_name):
+    response = iam_client.list_attached_user_policies(
+        UserName=username
+    )
+    
+    for policy in response["Policies"]:
+        if policy["PolicyName"] == policy_name:
+            return True
+    return False
+    
+    
 
 def configure_iam_resource(session):
     return session.resource('iam')

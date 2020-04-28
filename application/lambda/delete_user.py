@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
     configure_user_policy, configure_iam_resource, configure_iam_client, logging_config, NO_SUCH_ENTITY, \
-    policy_exists, user_exists
+    policy_attached_to_user, user_exists
 
 logger = logging_config()
 
@@ -35,7 +35,7 @@ def _delete_user_cloudwatch_account(account_id, username):
 
     iam = configure_iam_resource(session)
 
-    iam_client = configure_iam_client(session)
+    iam_client =  configure_iam_client(session)
 
     user = configure_user_client(iam, username)
 
@@ -44,14 +44,11 @@ def _delete_user_cloudwatch_account(account_id, username):
     if not user_exists(iam_client, username):
         return {'username': username}
     
-
-    try:
+    if policy_attached_to_user(iam_client, username, os.environ['USER_POLICY']):
         user.detach_policy(PolicyArn=policy_arn)
-    except ClientError as error:
-        if error.response['Error']['Code'] == 'NoSuchEntity':
-            logger.info(error)
-        else:
-            logger.exception(error)
+        logger.info("Policy detached.")
+    
+    return False
 
     try:
         user.LoginProfile().load()
