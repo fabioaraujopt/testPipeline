@@ -5,7 +5,8 @@ import os
 from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_client, logging_config, NO_SUCH_ENTITY
+    configure_user_policy, configure_iam_client, logging_config, NO_SUCH_ENTITY, \
+    policy_exists
 
 logger = logging_config()
 
@@ -33,25 +34,25 @@ def _update_cloudwatch_policy(account_id):
 
     iam = configure_iam_client(session)
 
+    iam_client =  configure_iam_client(session)
+
     policy_arn = configure_user_policy(account_id)
 
     with open('./policies/CloudWatchUserPolicy.json') as f:
         repo_policy = json.load(f)
 
-    try:
-        policy = iam.get_policy(
-            PolicyArn=policy_arn
-        )
-    except ClientError as error:
-        if error.response['Error']['Code'] == NO_SUCH_ENTITY:
-            policy = iam.create_policy(
-                PolicyName=os.environ['USER_POLICY'],
-                PolicyDocument=json.dumps(repo_policy),
-            )
-            logger.info(error)
-        else:
-            logger.exception(error)
+    if not policy_exists(iam_client, os.environ['USER_POLICY']):
+        with open('./policies/CloudWatchUserPolicy.json') as f:
+            repo_policy = json.load(f)
 
+        iam.create_policy(
+            PolicyName=os.environ['USER_POLICY'],
+            PolicyDocument=json.dumps(repo_policy)
+        )
+        logger.info("New policy created.")
+    
+    policy = iam.get_policy(PolicyArn=policy_arn)
+    
     policy_default_version = iam.get_policy_version(
         PolicyArn=policy_arn,
         VersionId=policy["Policy"]["DefaultVersionId"]
