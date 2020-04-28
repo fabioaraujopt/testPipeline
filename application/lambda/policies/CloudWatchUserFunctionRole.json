@@ -12,7 +12,9 @@
                 "iam:CreateLoginProfile",
                 "iam:AddUserToGroup",
                 "iam:RemoveUserFromGroup",
+                "iam:ListAttachedUserPolicies",
                 "iam:ListAttachedGroupPolicies",
+                "iam:DetachUserPolicy",
                 "iam:CreatePolicyVersion",
                 "iam:DeleteLoginProfile",
                 "iam:ChangePassword",
@@ -33,8 +35,7 @@
                 "iam:ListGroups",
                 "iam:GetGroupPolicy",
                 "iam:GetUser",
-                "iam:GetLoginProfile",
-                "iam:DetachUserPolicy"
+                "iam:GetLoginProfile"
             ],
             "Resource": "*"
         }
