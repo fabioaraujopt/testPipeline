@@ -5,8 +5,8 @@ ErrorCodeTuple = namedtuple('ErrorCode', ['message', 'status_code'])
 
 #todo change string
 known_error_codes = {
-    'AccessDenied': ErrorCodeTuple('Access denied for account', 403),
-    'EntityTemporarilyUnmodifiable': ErrorCodeTuple('User cannot be modified', 409)
+    'AccessDenied': ErrorCodeTuple('AWS denied action for this account.', 403),
+    'EntityTemporarilyUnmodifiable': ErrorCodeTuple('AWS couldn\' could not perform this action at the moment. Please try again later.', 409)
 }
 
 
