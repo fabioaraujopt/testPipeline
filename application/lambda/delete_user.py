@@ -2,7 +2,7 @@ import json
 import os
 from botocore.exceptions import ClientError
 from error_response import error_response
-from utils import assume_role,  configure_user_client, configure_user_policy, \
+from utils import assume_role, configure_user_client, configure_user_policy, \
     configure_iam_resource, configure_iam_client, logging_config, \
     NO_SUCH_ENTITY, policy_attached_to_user, user_exists
 

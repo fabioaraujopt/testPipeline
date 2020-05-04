@@ -12,7 +12,7 @@ phases:
           - echo Testing python code...
           - cd $CODEBUILD_SRC_DIR
           - ls
-          - pycodestyle  --ignore=E501 application/lambda
+          - pycodestyle  --ignore=E501,W605 application/lambda
           - echo "Starting build `date` in `pwd`"
           - echo testing SAM app template ...
           - cfn-lint ./application/template.yaml

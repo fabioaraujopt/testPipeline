@@ -6,14 +6,14 @@ import auth
 import os
 
 RESOURCES_GUID = {
-    "user" : {
+    "user": {
         "DELETE": "b96dffc0-ab86-4679-b989-110742d9d462",
         "PUT": "eb07c9a0-609a-497e-961c-26717c897324"
     },
-    "user/password" : { 
+    "user/password": {
         "PATCH": "4bddf46b-e472-45f1-b514-70c8c1005406"
     },
-    "policy":{
+    "policy": {
         "PUT": "0500881c-de42-447d-847c-733504136c9d"
     }
 }
@@ -27,9 +27,9 @@ ssm_client = boto3.client('ssm')
 
 
 def lambda_handler(event, context):
-    
+
     logger.info(event)
-    
+
     resp = ssm_client.get_parameter(
         Name=os.environ['SSM_PUBLIC_KEY_NAME'],
     )
@@ -60,17 +60,17 @@ def lambda_handler(event, context):
     policy.stage = api_gateway_arn_tmp[1]
 
     guid = RESOURCES_GUID[resource][method]
-    
+
     try:
         auth.validate_token(client_token, public_key, guid)
     except Exception as e:
         logger.error(e)
         raise Exception("Unauthorized")
-    
+
     policy.allow_method(method, '*')
-    
+
     auth_response = policy.build()
-    
+
     logger.info(auth_response)
 
     return auth_response

@@ -65,9 +65,9 @@ def _create_cloud_watch_account(account_id, username):
     # at current version there is no api to get list of login profiles
     try:
         user.LoginProfile().create(
-                Password=password,
-                PasswordResetRequired=True
-            )
+            Password=password,
+            PasswordResetRequired=True
+        )
     except ClientError as error:
         if error.response['Error']['Code'] == ENTITY_ALREADY_EXISTS:
             logger.warning("User already exists.")
