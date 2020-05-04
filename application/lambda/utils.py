@@ -18,40 +18,40 @@ def logging_config():
 
 def configure_iam_client(session):
     return session.client('iam')
-    
+
 
 def policy_exists(iam_client, policy_name):
-    
+
     response = iam_client.list_policies(
         Scope='All',
         OnlyAttached=False
     )
-    
+
     for policy in response["Policies"]:
         if policy["PolicyName"] == policy_name:
             return True
     return False
-    
+
 def user_exists(iam_client, username):
     response = iam_client.list_users()
-    
+
     for user in response["Users"]:
         if user["UserName"] == username:
             return True
     return False
-    
+
 
 def policy_attached_to_user(iam_client, username, policy_name):
     response = iam_client.list_attached_user_policies(
         UserName=username
     )
-    
+
     for policy in response["AttachedPolicies"]:
         if policy["PolicyName"] == policy_name:
             return True
     return False
-    
-    
+
+
 
 def configure_iam_resource(session):
     return session.resource('iam')

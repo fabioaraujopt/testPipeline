@@ -50,9 +50,9 @@ def _update_cloudwatch_policy(account_id):
             PolicyDocument=json.dumps(repo_policy)
         )
         logger.info("New policy created.")
-    
+
     policy = iam.get_policy(PolicyArn=policy_arn)
-    
+
     policy_default_version = iam.get_policy_version(
         PolicyArn=policy_arn,
         VersionId=policy["Policy"]["DefaultVersionId"]

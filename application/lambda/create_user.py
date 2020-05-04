@@ -55,12 +55,12 @@ def _create_cloud_watch_account(account_id, username):
         )
         logger.info("New policy created.")
 
-    if not user_exists(iam_client, username): 
+    if not user_exists(iam_client, username):
         user.create()
         logger.info("New user created.")
-    
+
     password = genpass(8)
-    
+
     #if login profile was already created continue code execution 
     #at current version there is no api to get list of login profiles
     try:
@@ -75,19 +75,16 @@ def _create_cloud_watch_account(account_id, username):
         else:
             logger.error(error)
             raise
-    
+
     if login_profile_already_exists:
         user.LoginProfile().update(
             Password=password,
             PasswordResetRequired=True
         )
-    
+
     user.attach_policy(PolicyArn=policy_arn)
-        
+
     return {
         'username': username,
         'password': password
     }
-
-
-    

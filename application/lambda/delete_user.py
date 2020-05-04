@@ -43,11 +43,11 @@ def _delete_user_cloudwatch_account(account_id, username):
 
     if not user_exists(iam_client, username):
         return {'username': username}
-    
+
     if policy_attached_to_user(iam_client, username, os.environ['USER_POLICY']):
         user.detach_policy(PolicyArn=policy_arn)
         logger.info("Policy detached.")
-    
+
     #if login profile was already deleted continue code execution 
     #at current version there is no api to get list of login profiles
     try:
@@ -58,7 +58,7 @@ def _delete_user_cloudwatch_account(account_id, username):
         else:
             logger.error(error)
             raise
-    
+
     user.delete()
 
     return {'username': username}
