@@ -192,8 +192,8 @@ class AuthPolicy:
         two main statements for the effect: one statement for Allow and
          one statement for Deny.
          '''
-        if ((self.allow_methods is None or not self.allow_methods) and
-                (self.deny_methods is None or not self.deny_methods)):
+        if ((self.allow_methods is None or not self.allow_methods) and (
+                self.deny_methods is None or not self.deny_methods)):
             raise NameError("No statements defined for the policy")
 
         policy = {
