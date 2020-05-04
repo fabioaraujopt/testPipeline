@@ -1,12 +1,9 @@
 import json
-import botocore
-import logging
 import os
 from botocore.exceptions import ClientError
 from error_response import error_response
-from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_client, logging_config, NO_SUCH_ENTITY, \
-    policy_exists
+from utils import assume_role, configure_user_policy, configure_iam_client, \
+     logging_config, policy_exists
 
 logger = logging_config()
 
@@ -34,7 +31,7 @@ def _update_cloudwatch_policy(account_id):
 
     iam = configure_iam_client(session)
 
-    iam_client =  configure_iam_client(session)
+    iam_client = configure_iam_client(session)
 
     policy_arn = configure_user_policy(account_id)
 

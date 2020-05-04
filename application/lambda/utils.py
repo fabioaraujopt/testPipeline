@@ -16,6 +16,7 @@ def logging_config():
 
     return logger
 
+
 def configure_iam_client(session):
     return session.client('iam')
 
@@ -31,6 +32,7 @@ def policy_exists(iam_client, policy_name):
         if policy["PolicyName"] == policy_name:
             return True
     return False
+
 
 def user_exists(iam_client, username):
     response = iam_client.list_users()
@@ -52,7 +54,6 @@ def policy_attached_to_user(iam_client, username, policy_name):
     return False
 
 
-
 def configure_iam_resource(session):
     return session.resource('iam')
 
@@ -62,7 +63,9 @@ def configure_user_client(iam, username):
 
 
 def configure_user_policy(account_id):
-    return "arn:aws:iam::{}:policy/{}".format(account_id, os.environ['USER_POLICY'])
+    return "arn:aws:iam::{}:policy/{}".format(
+        account_id, os.environ['USER_POLICY']
+    )
 
 
 def assume_role(account_id, role_to_assume):

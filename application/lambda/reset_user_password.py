@@ -1,11 +1,9 @@
 import json
-import botocore
-import logging
 import os
 from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config
+    configure_iam_resource, logging_config
 
 logger = logging_config()
 
@@ -20,7 +18,8 @@ def lambda_handler(event, context):
     username = event_body["username"]
 
     try:
-        response = _reset_user_password_cloudwatch_account(account_id, username)
+        response = _reset_user_password_cloudwatch_account(
+            account_id, username)
     except ClientError as error:
         logger.exception(error)
         return error_response(error)

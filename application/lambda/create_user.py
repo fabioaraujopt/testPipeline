@@ -3,8 +3,8 @@ import os
 from botocore.exceptions import ClientError
 from error_response import error_response
 from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config, ENTITY_ALREADY_EXISTS, \
-    policy_exists, user_exists
+    configure_user_policy, configure_iam_resource, configure_iam_client, \
+    logging_config, ENTITY_ALREADY_EXISTS, policy_exists, user_exists
 
 logger = logging_config()
 
@@ -61,8 +61,8 @@ def _create_cloud_watch_account(account_id, username):
 
     password = genpass(8)
 
-    #if login profile was already created continue code execution 
-    #at current version there is no api to get list of login profiles
+    # if login profile was already created continue code execution
+    # at current version there is no api to get list of login profiles
     try:
         user.LoginProfile().create(
                 Password=password,

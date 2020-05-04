@@ -1,11 +1,10 @@
 import json
-import botocore
 import os
 from botocore.exceptions import ClientError
 from error_response import error_response
-from utils import assume_role, genpass, configure_user_client, \
-    configure_user_policy, configure_iam_resource, configure_iam_client, logging_config, NO_SUCH_ENTITY, \
-    policy_attached_to_user, user_exists
+from utils import assume_role,  configure_user_client, configure_user_policy, \
+    configure_iam_resource, configure_iam_client, logging_config, \
+    NO_SUCH_ENTITY, policy_attached_to_user, user_exists
 
 logger = logging_config()
 
@@ -35,7 +34,7 @@ def _delete_user_cloudwatch_account(account_id, username):
 
     iam = configure_iam_resource(session)
 
-    iam_client =  configure_iam_client(session)
+    iam_client = configure_iam_client(session)
 
     user = configure_user_client(iam, username)
 
@@ -44,12 +43,16 @@ def _delete_user_cloudwatch_account(account_id, username):
     if not user_exists(iam_client, username):
         return {'username': username}
 
-    if policy_attached_to_user(iam_client, username, os.environ['USER_POLICY']):
+    if policy_attached_to_user(
+        iam_client,
+        username,
+        os.environ['USER_POLICY']
+    ):
         user.detach_policy(PolicyArn=policy_arn)
         logger.info("Policy detached.")
 
-    #if login profile was already deleted continue code execution 
-    #at current version there is no api to get list of login profiles
+    # if login profile was already deleted continue code execution
+    # at current version there is no api to get list of login profiles
     try:
         user.LoginProfile().delete()
     except ClientError as error:
