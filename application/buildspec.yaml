@@ -11,10 +11,11 @@ phases:
           - pip install cfn-lint pycodestyle
           - echo Testing python code...
           - cd $CODEBUILD_SRC_DIR
-          - pycodestyle  --ignore=E501 $(pwd)/application
+          - ls
+          - pycodestyle  --ignore=E501 ./application
           - echo "Starting build `date` in `pwd`"
           - echo testing SAM app template ...
-          - cfn-lint ./rdsoperation/template.yaml
+          - cfn-lint ./application/template.yaml
           - echo Check if the auth layer exists before build the app ...
           - aws lambda get-layer-version --layer-name api-authorization-layer --version-number 1 >> /dev/null
     build:
