@@ -10,7 +10,7 @@ logger = logging_config()
 
 
 def lambda_handler(event, context):
-  
+
     logger.info(event)
 
     account_id = event['pathParameters']['account-id']
@@ -32,14 +32,14 @@ def lambda_handler(event, context):
 
 
 def _create_cloud_watch_account(account_id, username):
-    
+
     login_profile_already_exists = False
-    
+
     session = assume_role(account_id, os.environ['FUNCTION_POLICY'])
 
     iam = configure_iam_resource(session)
-    
-    iam_client =  configure_iam_client(session)
+
+    iam_client = configure_iam_client(session)
 
     user = configure_user_client(iam, username)
 
@@ -54,7 +54,7 @@ def _create_cloud_watch_account(account_id, username):
             PolicyDocument=json.dumps(repo_policy)
         )
         logger.info("New policy created.")
-    
+
     if not user_exists(iam_client, username): 
         user.create()
         logger.info("New user created.")
