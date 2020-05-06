@@ -13,6 +13,9 @@ RESOURCES_GUID = {
     "user/password": {
         "PATCH": "4bddf46b-e472-45f1-b514-70c8c1005406"
     },
+    "user/policy": {
+        "PUT": "72ca3afb-6a46-4bb8-aa2d-f0b0f7627835"
+    },
     "policy": {
         "PUT": "0500881c-de42-447d-847c-733504136c9d"
     }
