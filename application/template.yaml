@@ -88,7 +88,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: update_policy.lambda_handler
+      Handler: update_account_policy.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Timeout: 30
@@ -109,7 +109,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
-      Handler: update_policy.lambda_handler
+      Handler: update_user_policy.lambda_handler
       Runtime: python3.6
       Role: !GetAtt CWUserFunctionRole.Arn
       Timeout: 30
