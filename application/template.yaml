@@ -84,7 +84,7 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
-  updateCWUserPolicyFunction:
+  updateAccountCWPolicyFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
@@ -97,11 +97,32 @@ Resources:
           USER_POLICY: !Ref UserPolicy
           FUNCTION_POLICY: !Ref FunctionRole
 
-  updateCWUserPolicyFunctionPermission:
+  updateAccountCWPolicyFunctionPermission:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt "updateCWUserPolicyFunction.Arn"
+      FunctionName: !GetAtt "updateAccountCWPolicyFunction.Arn"
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
+
+  updateUserCWPolicyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./lambda
+      Handler: update_policy.lambda_handler
+      Runtime: python3.6
+      Role: !GetAtt CWUserFunctionRole.Arn
+      Timeout: 30
+      Environment:
+        Variables:
+          USER_POLICY: !Ref UserPolicy
+          FUNCTION_POLICY: !Ref FunctionRole
+
+  updateUserCWPolicyFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt "updateUserCWPolicyFunction.Arn"
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
 
@@ -208,6 +229,13 @@ Resources:
       ParentId: !Ref UserApiGatewayResource
       PathPart: password
       RestApiId: !Ref CWUsersApiGatewayRestApi
+  
+  UserPolicyApiGatewayResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !Ref UserApiGatewayResource
+      PathPart: policy
+      RestApiId: !Ref CWUsersApiGatewayRestApi
 
   PolicyApiGatewayResource:
     Type: 'AWS::ApiGateway::Resource'
@@ -277,7 +305,7 @@ Resources:
       RequestModels: 
         application/json: !Ref CWUsersRequestModel
   
-  CWUsersPolicyPUTApiGatewayMethod:
+  CWUsersAccountPolicyPUTApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       ApiKeyRequired: false
@@ -289,7 +317,21 @@ Resources:
       Integration:
         IntegrationHttpMethod: POST
         Type: AWS_PROXY
-        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${updateCWUserPolicyFunction.Arn}/invocations"
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${updateAccountCWPolicyFunction.Arn}/invocations"
+  
+  CWUsersUserPolicyPUTApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: false
+      HttpMethod: PUT
+      ResourceId: !Ref UserPolicyApiGatewayResource
+      RestApiId: !Ref CWUsersApiGatewayRestApi
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref CWUsersApiGatewayAuthorizer
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${updateUserCWPolicyFunction.Arn}/invocations"
     
 
   CWUsersDELETEApiGatewayMethod:
@@ -316,7 +358,8 @@ Resources:
       - CWUsersPUTApiGatewayMethod
       - CWUsersPATCHApiGatewayMethod
       - CWUsersDELETEApiGatewayMethod
-      - CWUsersPolicyPUTApiGatewayMethod
+      - CWUsersAccountPolicyPUTApiGatewayMethod
+      - CWUsersUserPolicyPUTApiGatewayMethod
     Properties:
       RestApiId: !Ref CWUsersApiGatewayRestApi
       Description: "Deploy api gateway rest api"

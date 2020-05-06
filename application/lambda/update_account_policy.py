@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     account_id = event['pathParameters']['account-id']
 
     try:
-        response = _update_cloudwatch_policy(account_id)
+        response = _update_account_policy(account_id)
     except ClientError as error:
         logger.exception(error)
 
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     }
 
 
-def _update_cloudwatch_policy(account_id):
+def _update_account_policy(account_id):
     session = assume_role(account_id, os.environ['FUNCTION_POLICY'])
 
     iam = configure_iam_client(session)
