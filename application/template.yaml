@@ -20,19 +20,22 @@ Parameters:
     Type: String
     Default: auth-server-pub-key-dev
 
+Globals:
+  Function:
+    Runtime: python3.8
+    Timeout: 30
+    Role: !GetAtt CWUserFunctionRole.Arn
+    Environment:
+        Variables:
+          USER_POLICY: !Ref UserPolicy
+          FUNCTION_POLICY: !Ref FunctionRole
+
 Resources:
   createCWUserFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
       Handler: create_user.lambda_handler
-      Runtime: python3.8
-      Role: !GetAtt CWUserFunctionRole.Arn
-      Timeout: 30
-      Environment:
-        Variables:
-          USER_POLICY: !Ref UserPolicy
-          FUNCTION_POLICY: !Ref FunctionRole
 
   createCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -47,13 +50,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: reset_user_password.lambda_handler
-      Runtime: python3.8
-      Role: !GetAtt CWUserFunctionRole.Arn
-      Timeout: 30
-      Environment:
-          Variables:
-            USER_POLICY: !Ref UserPolicy
-            FUNCTION_POLICY: !Ref FunctionRole
+
 
   resetPasswordCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -68,13 +65,6 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: delete_user.lambda_handler
-      Runtime: python3.8
-      Role: !GetAtt CWUserFunctionRole.Arn
-      Timeout: 30
-      Environment:
-        Variables:
-          USER_POLICY: !Ref UserPolicy
-          FUNCTION_POLICY: !Ref FunctionRole
 
   deleteCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -89,13 +79,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: update_account_policy.lambda_handler
-      Runtime: python3.8
-      Role: !GetAtt CWUserFunctionRole.Arn
-      Timeout: 30
-      Environment:
-        Variables:
-          USER_POLICY: !Ref UserPolicy
-          FUNCTION_POLICY: !Ref FunctionRole
+
 
   updateAccountCWPolicyFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -110,13 +94,6 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: update_user_policy.lambda_handler
-      Runtime: python3.8
-      Role: !GetAtt CWUserFunctionRole.Arn
-      Timeout: 30
-      Environment:
-        Variables:
-          USER_POLICY: !Ref UserPolicy
-          FUNCTION_POLICY: !Ref FunctionRole
 
   updateUserCWPolicyFunctionPermission:
     Type: AWS::Lambda::Permission
