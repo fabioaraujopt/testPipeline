@@ -24,7 +24,6 @@ Globals:
   Function:
     Runtime: python3.8
     Timeout: 30
-    Role: !GetAtt CWUserFunctionRole.Arn
     Environment:
         Variables:
           USER_POLICY: !Ref UserPolicy
@@ -36,6 +35,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: create_user.lambda_handler
+      Role: !GetAtt CWUserFunctionRole.Arn
 
   createCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -44,12 +44,14 @@ Resources:
       FunctionName: !GetAtt "createCWUserFunction.Arn"
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CWUsersApiGatewayRestApi}/*/*"
+      
 
   resetPasswordCWUserFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda
       Handler: reset_user_password.lambda_handler
+      Role: !GetAtt CWUserFunctionRole.Arn
 
 
   resetPasswordCWUserFunctionPermission:
@@ -65,6 +67,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: delete_user.lambda_handler
+      Role: !GetAtt CWUserFunctionRole.Arn
 
   deleteCWUserFunctionPermission:
     Type: AWS::Lambda::Permission
@@ -79,6 +82,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: update_account_policy.lambda_handler
+      Role: !GetAtt CWUserFunctionRole.Arn
 
 
   updateAccountCWPolicyFunctionPermission:
@@ -94,6 +98,7 @@ Resources:
     Properties:
       CodeUri: ./lambda
       Handler: update_user_policy.lambda_handler
+      Role: !GetAtt CWUserFunctionRole.Arn
 
   updateUserCWPolicyFunctionPermission:
     Type: AWS::Lambda::Permission
