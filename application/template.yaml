@@ -181,7 +181,7 @@ Resources:
       Role: !GetAtt CWUserFunctionRole.Arn
       Layers: 
         - arn:aws:lambda:eu-west-1:920101814014:layer:api-authorization-layer:1
-      Runtime: python3.8
+      Runtime: python3.6
       Timeout: 30
       Environment:
         Variables:
