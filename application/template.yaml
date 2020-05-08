@@ -22,7 +22,7 @@ Parameters:
   APIAuthorizerLayerArn:
     Description: Arn of lambda authorizer layer.
     Type: String
-    Defult: arn:aws:lambda:eu-west-1:920101814014:layer:api-authorization-layer:1
+    Default: arn:aws:lambda:eu-west-1:920101814014:layer:api-authorization-layer:1
 
 Globals:
   Function:
