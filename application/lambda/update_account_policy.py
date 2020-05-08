@@ -39,9 +39,6 @@ def _update_account_policy(account_id):
         repo_policy = json.load(f)
 
     if not policy_exists(iam_client, os.environ['USER_POLICY']):
-        with open('./policies/CloudWatchUserPolicy.json') as f:
-            repo_policy = json.load(f)
-
         iam.create_policy(
             PolicyName=os.environ['USER_POLICY'],
             PolicyDocument=json.dumps(repo_policy)
