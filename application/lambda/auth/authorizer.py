@@ -66,7 +66,7 @@ def lambda_handler(event, context):
 
 
     auth.validate_token(client_token, public_key, guid)
-    
+
 
     policy.allow_method(method, '*')
 
