@@ -22,7 +22,7 @@ Parameters:
   APIAuthorizerLayerArn:
     Description: Arn of lambda authorizer layer.
     Type: String
-    Default: arn:aws:lambda:eu-west-1:920101814014:layer:api-authorization-layer:1
+    Default: arn:aws:lambda:us-east-1:920101814014:layer:api-authorization-layer:1
 
 Globals:
   Function:
@@ -143,7 +143,16 @@ Resources:
               Action:
                 - 'ssm:GetParameter'
               Resource:
-                - !Sub 'arn:aws:ssm:eu-west-1:*:parameter/${SSMParameterPublicKeyName}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:*:parameter/${SSMParameterPublicKeyName}'
+        - PolicyName: GetLayerVersion
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - 'lambda:GetLayerVersion'
+              Resource:
+                - !Ref APIAuthorizerLayerArn
   
   #### API RESOURCES ####
   CWUsersApiGatewayRestApi:
@@ -169,7 +178,7 @@ Resources:
       Role: !GetAtt CWUserFunctionRole.Arn
       Layers: 
         - !Ref APIAuthorizerLayerArn
-      Runtime: python3.6
+      Runtime: python3.7
       Environment:
         Variables:
           SSM_PUBLIC_KEY_NAME: !Ref SSMParameterPublicKeyName

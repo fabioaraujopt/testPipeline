@@ -17,7 +17,7 @@ phases:
           - echo testing SAM app template ...
           - cfn-lint ./application/template.yaml
           - echo Check if the auth layer exists before build the app ...
-          - aws lambda get-layer-version --layer-name api-authorization-layer --version-number 1 >> /dev/null
+          #- aws lambda get-layer-version --layer-name api-authorization-layer --version-number 1 >> /dev/null
     build:
         commands:
           - cd $CODEBUILD_SRC_DIR
