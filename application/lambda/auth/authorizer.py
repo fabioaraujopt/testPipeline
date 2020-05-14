@@ -64,8 +64,11 @@ def lambda_handler(event, context):
 
     guid = RESOURCES_GUID[resource][method]
 
-
-    auth.validate_token(client_token, public_key, guid)
+    try:
+        auth.validate_token(client_token, public_key, guid)
+    except Exception as e:
+        logger.error(e)
+        raise Exception("Unauthorized")
 
 
     policy.allow_method(method, '*')
