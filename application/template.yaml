@@ -22,7 +22,8 @@ Parameters:
   APIAuthorizerLayerArn:
     Description: Arn of lambda authorizer layer.
     Type: String
-    Default: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:api-authorization-layer:latest
+    Default: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:api-authorization-layer:latest"
+
 
 Globals:
   Function:
