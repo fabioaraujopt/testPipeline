@@ -162,7 +162,7 @@ Resources:
   CWUsersApiGatewayRestApi:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
-      Name: !Sub "{ProjectName}-apigateway"
+      Name: !Sub "${ProjectName}-apigateway"
 
   CWUsersApiGatewayAuthorizer:
     Type: AWS::ApiGateway::Authorizer
