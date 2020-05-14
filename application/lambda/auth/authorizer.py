@@ -4,6 +4,7 @@ import uuid
 import boto3
 import auth
 import os
+import base64
 
 RESOURCES_GUID = {
     "user": {
