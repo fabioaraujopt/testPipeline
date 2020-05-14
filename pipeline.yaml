@@ -56,9 +56,9 @@ Resources:
           Type: AWS::SSM::Parameter
           Properties: 
               Description: Public key used to decrypt the request on the auth lambda function
-              Name: !Ref SSMParameterPublicKeyName
+              Name: !Ref AuthServerPubKeyName
               Type: String
-              Value: !Ref AuthServerPubKeyName
+              Value: !Ref AuthServerPubKey
 
     BuildArtifactsBucket:
         Type: AWS::S3::Bucket
