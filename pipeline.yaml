@@ -41,11 +41,24 @@ Parameters:
         Type: String
         Description: 'master'
         Default: 'master'
-    PublicAuthenticationKey:
+    AuthServerPubKey:
         Type: String
+        NoEcho: true
         Description: 'Public key for authentication token validation. Must be base64 encoded.'
+    AuthServerPubKeyName:
+        Type: String
+        Default: 'xxxx-auth-server-pub-key-dev'
+        Description: "Name of the AuthServer public key name."
 
 Resources:
+
+    PublicKeySSMParameter:
+          Type: AWS::SSM::Parameter
+          Properties: 
+              Description: Public key used to decrypt the request on the auth lambda function
+              Name: !Ref SSMParameterPublicKeyName
+              Type: String
+              Value: !Join [ "\n", !Ref AuthServerPubKey]
 
     BuildArtifactsBucket:
         Type: AWS::S3::Bucket
@@ -114,6 +127,10 @@ Resources:
                         StackName: !Sub '${ParentStackName}-application'
                         TemplatePath: ApplicationBuildArtifactAsZip::packaged.yaml
                         OutputFileName: ApplicationOutputs.json
+                        ParameterOverrides: !Sub |
+                          {
+                            "SSMParameterPublicKeyName": "${AuthServerPubKeyName}"
+                          }
                     InputArtifacts:
                       - Name: ApplicationBuildArtifactAsZip
                     OutputArtifacts:
