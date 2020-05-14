@@ -19,10 +19,6 @@ Parameters:
     Description: Name of public key used to decrypt OS authorization tokens.
     Type: String
     Default: auth-server-pub-key-dev
-  APIAuthorizerLayerArn:
-    Description: Arn of lambda authorizer layer.
-    Type: String
-    Default: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:api-authorization-layer:latest"
 
 
 Globals:
@@ -153,7 +149,7 @@ Resources:
               Action:
                 - 'lambda:GetLayerVersion'
               Resource:
-                - !Ref APIAuthorizerLayerArn
+                - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:api-authorization-layer:latest"
   
   #### API RESOURCES ####
   CWUsersApiGatewayRestApi:
@@ -178,7 +174,7 @@ Resources:
       Handler: authorizer.lambda_handler
       Role: !GetAtt CWUserFunctionRole.Arn
       Layers: 
-        - !Ref APIAuthorizerLayerArn
+        - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:api-authorization-layer:latest"
       Runtime: python3.7
       Environment:
         Variables:
