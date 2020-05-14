@@ -36,9 +36,14 @@ Parameters:
     GithubRepo:
         Type: String
         Description: 'os-cloud-cwusers'
+        Default: 'os-cloud-cwusers'
     GithubBranch:
         Type: String
         Description: 'master'
+        Default: 'master'
+    PublicAuthenticationKey:
+        Type: String
+        Description: 'Public key for authentication token validation. Must be base64 encoded.'
 
 Resources:
 
