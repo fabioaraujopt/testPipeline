@@ -49,6 +49,11 @@ Parameters:
         Type: String
         Default: 'xxxx-auth-server-pub-key-dev'
         Description: "Name of the AuthServer public key name."
+    AuthLayerArn:
+        Type: String
+        Default: 'arn:aws:lambda:us-east-1:179986412395:layer:api-authorization-layer:1'
+        Description: 'Layer to decode and validate authentication token.'
+
 
 Resources:
 
@@ -129,7 +134,9 @@ Resources:
                         OutputFileName: ApplicationOutputs.json
                         ParameterOverrides: !Sub |
                           {
-                            "SSMParameterPublicKeyName": "${AuthServerPubKeyName}"
+                            "SSMParameterPublicKeyName": "${AuthServerPubKeyName}",
+                            "APIAuthorizerLayerArn":"${AuthLayerArn}",
+                            "ProjectName":"${ProjectName}"
                           }
                     InputArtifacts:
                       - Name: ApplicationBuildArtifactAsZip
