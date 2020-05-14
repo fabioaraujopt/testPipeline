@@ -3,6 +3,8 @@ This feature was implemented to manage cloudwatch users in accounts.
 
 ## Deployment
 To deploy this feature the following steps must be followed:
+
+The lambdas implemented by this feature have an authentication layer as dependency. Please ensure layer is deployed or follow the deployment steps in the repository [I'm an inline-style link](https://github.com/OutSystems/apigw_lambda_authorizer_auth-layer).
 1. Open cloudformation and upload pipeline.yaml
 2. Fill the required parameters
    - OSAuth server public key must be in **base64*
