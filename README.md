@@ -8,6 +8,7 @@ The lambdas implemented by this feature have an authentication layer as dependen
 1. Open cloudformation and upload pipeline.yaml
 2. Fill the required parameters
    - OSAuth server public key must be in **base64*
+   - AuthLayerArn can be retreived in the layer Cloudformation output variables.
 3. Wait till pipeline finishes execution
 4. Go to apigateway and look for name `{project-name}-apigateway`, go to stages and retreive base url to be used.
 
